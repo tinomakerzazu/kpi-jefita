@@ -42,6 +42,18 @@
         var(--bg);
       background-attachment:fixed;
     }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-10% -10% -30% -10%;
+      background:
+        radial-gradient(600px 400px at 10% 20%, rgba(242,195,107,0.18), transparent 60%),
+        radial-gradient(700px 500px at 90% 15%, rgba(212,58,134,0.22), transparent 60%),
+        radial-gradient(800px 500px at 50% 90%, rgba(255,255,255,0.10), transparent 60%);
+      pointer-events:none;
+      z-index:-1;
+      filter:blur(10px);
+    }
 
     header{
       position:sticky; top:0; z-index:20;
@@ -69,19 +81,6 @@
       background:var(--panel2);
     }
     .title{display:flex; flex-direction:column; gap:4px}
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .brand img{
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      border:1px solid var(--border2);
-      box-shadow:0 8px 18px rgba(0,0,0,0.25);
-      object-fit:cover;
-    }
     .title h1{
       margin:0; font-size:18px; font-weight:900; letter-spacing:.2px;
       background:linear-gradient(135deg, #f7d89a 0%, #f2c36b 35%, #d43a86 100%);
@@ -114,7 +113,7 @@
     @media (max-width: 1100px){ .grid{grid-template-columns:1fr} }
 
     .panel{
-      background:linear-gradient(180deg, var(--panel), var(--panel2));
+      background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
       border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
@@ -125,14 +124,14 @@
       padding:16px 18px;
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       border-bottom:1px solid var(--border);
-      background:rgba(255,255,255,0.02);
+      background:rgba(255,255,255,0.03);
     }
     .panel .head h2{
       margin:0;
       font-size:13px;
       letter-spacing:.3px;
       text-transform:uppercase;
-      color:#dbe6ff;
+      color:#ffe6f2;
     }
     .panel .body{padding:16px 18px; flex:1; overflow:auto}
     .panel .footer{padding:12px 18px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); background:rgba(255,255,255,0.01); line-height:1.5}
@@ -159,7 +158,7 @@
     @media (max-width: 800px){ .kpis{grid-template-columns:repeat(2,1fr)} }
     @media (max-width: 520px){ .kpis{grid-template-columns:1fr} }
     .card{
-      background:rgba(12,22,44,0.65);
+      background:linear-gradient(160deg, rgba(212,58,134,0.12), rgba(0,0,0,0.35));
       border:1px solid var(--border);
       border-radius:14px;
       padding:14px;
@@ -167,7 +166,7 @@
       display:flex; flex-direction:column; gap:8px;
       transition:all .2s ease;
     }
-    .card:hover{border-color:rgba(212,58,134,0.25); background:rgba(12,22,44,0.85)}
+    .card:hover{border-color:rgba(212,58,134,0.35); background:linear-gradient(160deg, rgba(212,58,134,0.18), rgba(0,0,0,0.45))}
     .card .label{color:var(--muted); font-size:12px; font-weight:900}
     .card .value{font-size:28px; font-weight:1000; color:#fff}
     .card .meta{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:11px; color:var(--muted)}
@@ -180,18 +179,18 @@
       border-radius:14px;
       border:1px solid var(--border);
       overflow:hidden;
-      background:rgba(12,22,44,0.55);
+      background:rgba(0,0,0,0.25);
     }
     th, td{padding:12px; border-bottom:1px solid var(--border); vertical-align:middle; font-size:13px}
     th{
       position:sticky; top:0; z-index:5;
       text-align:left;
       font-size:11px; letter-spacing:.2px; text-transform:uppercase;
-      color:#dbe6ff;
+      color:#ffe6f2;
       background:rgba(255,255,255,0.04);
     }
     tbody tr{transition:all .2s ease}
-    tbody tr:hover{background:rgba(91,140,255,0.06)}
+    tbody tr:hover{background:rgba(212,58,134,0.08)}
     .muted{color:var(--muted)}
     .mono{font-family:var(--mono)}
 
@@ -213,7 +212,7 @@
     }
 
     .field{
-      background:rgba(12,22,44,0.55);
+      background:rgba(0,0,0,0.28);
       border:1px solid var(--border);
       border-radius:14px;
       padding:12px;
@@ -284,7 +283,7 @@
       color:var(--text);
       cursor:pointer;
     }
-    .btn-small.danger{border-color:rgba(231,76,60,0.35); color:#ffc0b9; background:rgba(231,76,60,0.10)}
+    .btn-small.danger{border-color:rgba(234,90,106,0.35); color:#ffd1d8; background:rgba(234,90,106,0.12)}
 
     .vendor-grid{
       display:grid;
@@ -381,13 +380,15 @@
         <img src="Jefita icono.jpeg" alt="La Jefita" />
         <div class="title">
           <h1>KPI Vendedores</h1>
-          <small>Formulario (Preguntas 2–13) + Dashboard + Baseline + Export CSV (local)</small>
+          <small>Calculadora KPI'S - Empresa "La Jefita"</small>
         </div>
       </div>
       <div class="actions">
         <button class="primary" id="btnSaveForm">Guardar respuesta</button>
         <button class="success" id="btnBaseline">Guardar baseline</button>
         <button id="btnExport">Exportar CSV</button>
+        <button id="btnShare">Compartir enlace</button>
+        <button class="danger" id="btnClearLink">Quitar enlace</button>
         <button class="danger" id="btnReset">Reset</button>
       </div>
     </div>
@@ -434,8 +435,7 @@
       </div>
 
       <div class="footer">
-        KPIs calculados desde el formulario: Conversión 1er contacto (P7), Confianza (P13), Cross-selling (P9), Seguimiento (P10), # Seguimientos (P11), Pitch (P12), Experiencia (P5), Upsell (P8), Tiempo de cierre (P6).
-      </div>
+       Disponible
     </section>
 
     <aside class="panel">
@@ -771,7 +771,7 @@
   </section>
 
   <div class="alert">
-    Baseline guarda un “snapshot” del equipo para ver cambios. Exporta CSV para enviar reportes.
+    QUEJAS - SOPORTE - MEJORAS : 977 446 511 / jamesrojasdiaz01@gmail.com 
   </div>
 </main>
 
@@ -819,6 +819,8 @@
     compareA: document.getElementById("compareA"),
     compareB: document.getElementById("compareB"),
     compareSummary: document.getElementById("compareSummary"),
+    btnShare: document.getElementById("btnShare"),
+    btnClearLink: document.getElementById("btnClearLink"),
 
     fName: document.getElementById("fName"),
 
@@ -850,6 +852,17 @@
     return String(s ?? "")
       .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
       .replaceAll("\"","&quot;").replaceAll("'","&#039;");
+  }
+
+  function utf8ToBase64(str){
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+      String.fromCharCode(parseInt(p1, 16))
+    ));
+  }
+  function base64ToUtf8(str){
+    return decodeURIComponent(atob(str).split("").map(c =>
+      `%${c.charCodeAt(0).toString(16).padStart(2,"0")}`
+    ).join(""));
   }
 
   function getTargetsFromUI(){
@@ -1449,6 +1462,40 @@
     }
   }
 
+  function makeShareLink(){
+    const payload = { targets: getTargetsFromUI(), team: state.team, targetsVersion: TARGETS_VERSION };
+    const encoded = utf8ToBase64(JSON.stringify(payload));
+    return `${location.origin}${location.pathname}#s=${encoded}`;
+  }
+
+  function applySharedState(encoded){
+    try{
+      const data = JSON.parse(base64ToUtf8(encoded));
+      const normalizedTargets = (data?.targetsVersion === TARGETS_VERSION)
+        ? normalizeTargets(data?.targets)
+        : normalizeTargets(TARGET_DEFAULTS);
+      applyTargetsToUI(normalizedTargets);
+      state.targets = normalizedTargets;
+      if(Array.isArray(data?.team)){
+        state.team = data.team.map(v => recomputeDerivedFields(v));
+      }
+      renderTable();
+      renderKPIs();
+      saveState();
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  function tryLoadFromShare(){
+    const hash = location.hash || "";
+    if(!hash.startsWith("#s=")) return false;
+    const encoded = hash.slice(3);
+    if(!encoded) return false;
+    return applySharedState(encoded);
+  }
+
   function resetAll(){
     if(!confirm("Esto borrará datos, metas y baseline. ¿Continuar?")) return;
     localStorage.removeItem(STORAGE_KEY);
@@ -1497,6 +1544,24 @@
   document.getElementById("btnBaseline").addEventListener("click", saveBaseline);
   document.getElementById("btnExport").addEventListener("click", exportCSV);
   document.getElementById("btnReset").addEventListener("click", resetAll);
+  if(els.btnShare){
+    els.btnShare.addEventListener("click", () => {
+      const link = makeShareLink();
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(link)
+          .then(() => alert("Enlace copiado. Abrelo en otro dispositivo para ver los mismos datos."))
+          .catch(() => prompt("Copia este enlace:", link));
+      }else{
+        prompt("Copia este enlace:", link);
+      }
+    });
+  }
+  if(els.btnClearLink){
+    els.btnClearLink.addEventListener("click", () => {
+      history.replaceState(null, "", location.pathname + location.search);
+      alert("Enlace compartido eliminado.");
+    });
+  }
 
   if(els.compareA) els.compareA.addEventListener("change", renderCompare);
   if(els.compareB) els.compareB.addEventListener("change", renderCompare);
@@ -1550,19 +1615,22 @@
 
   // Init
   (function init(){
-    const loaded = loadState();
-    const normalizedTargets = (loaded?.targetsVersion === TARGETS_VERSION)
-      ? normalizeTargets(loaded?.targets)
-      : normalizeTargets(TARGET_DEFAULTS);
-    applyTargetsToUI(normalizedTargets);
-    state.targets = normalizedTargets;
+    const loadedFromShare = tryLoadFromShare();
+    if(!loadedFromShare){
+      const loaded = loadState();
+      const normalizedTargets = (loaded?.targetsVersion === TARGETS_VERSION)
+        ? normalizeTargets(loaded?.targets)
+        : normalizeTargets(TARGET_DEFAULTS);
+      applyTargetsToUI(normalizedTargets);
+      state.targets = normalizedTargets;
 
-    if(Array.isArray(loaded?.team)){
-      state.team = loaded.team.map(v => recomputeDerivedFields(v));
+      if(Array.isArray(loaded?.team)){
+        state.team = loaded.team.map(v => recomputeDerivedFields(v));
+      }
+
+      renderTable();
+      renderKPIs();
     }
-
-    renderTable();
-    renderKPIs();
 
     const base = loadBaseline();
     if(base?.savedAt) els.lastSaved.textContent = `Baseline: ${base.savedAt}`;
