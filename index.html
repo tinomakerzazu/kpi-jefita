@@ -1,375 +1,11 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>KPI Vendedores | Form + Dashboard</title>
 
-  <style>
-    :root{
-      --primary:#d43a86;
-      --primary-2:#b32368;
-      --accent:#f2c36b;
-      --accent-2:#f7d89a;
-      --success:#42c98b;
-      --warning:#f0c043;
-      --danger:#ea5a6a;
-
-      --bg:#2a0b1c;
-      --panel:rgba(255,255,255,0.08);
-      --panel2:rgba(255,255,255,0.04);
-      --text:#fff4f9;
-      --muted:#f0cfe0;
-      --border:rgba(255,255,255,.14);
-      --border2:rgba(255,255,255,.20);
-      --shadow:0 14px 34px rgba(0,0,0,.35);
-      --radius:16px;
-
-      --sans: "Poppins", "Trebuchet MS", Arial, sans-serif;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 20% 10%, rgba(212,58,134,0.35), transparent 60%),
-        radial-gradient(900px 500px at 80% 0%, rgba(242,195,107,0.16), transparent 60%),
-        radial-gradient(800px 500px at 40% 100%, rgba(255,255,255,0.10), transparent 60%),
-        var(--bg);
-      background-attachment:fixed;
-    }
-    body::before{
-      content:"";
-      position:fixed;
-      inset:-10% -10% -30% -10%;
-      background:
-        radial-gradient(600px 400px at 10% 20%, rgba(242,195,107,0.18), transparent 60%),
-        radial-gradient(700px 500px at 90% 15%, rgba(212,58,134,0.22), transparent 60%),
-        radial-gradient(800px 500px at 50% 90%, rgba(255,255,255,0.10), transparent 60%);
-      pointer-events:none;
-      z-index:-1;
-      filter:blur(10px);
-    }
-
-    header{
-      position:sticky; top:0; z-index:20;
-      background:rgba(42,11,28,0.90);
-      backdrop-filter: blur(10px);
-      border-bottom:1px solid var(--border);
-    }
-    .wrap{max-width:1400px;margin:0 auto;padding:0 18px}
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:14px; padding:16px 0;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .brand img{
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      border:1px solid var(--border2);
-      box-shadow:0 8px 18px rgba(0,0,0,0.25);
-      object-fit:cover;
-      background:var(--panel2);
-    }
-    .title{display:flex; flex-direction:column; gap:4px}
-    .title h1{
-      margin:0; font-size:18px; font-weight:900; letter-spacing:.2px;
-      background:linear-gradient(135deg, #f7d89a 0%, #f2c36b 35%, #d43a86 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      background-clip:text;
-    }
-    .title small{color:var(--muted); font-size:12px}
-    .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-
-    button{
-      border:1px solid var(--border2);
-      background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-      color:var(--text);
-      border-radius:12px;
-      padding:10px 14px;
-      cursor:pointer;
-      box-shadow:0 8px 18px rgba(0,0,0,0.25);
-      transition:all .2s ease;
-      font-weight:900; font-size:12px;
-      text-transform:uppercase; letter-spacing:.3px;
-    }
-    button:hover{transform:translateY(-2px); border-color:rgba(212,58,134,.55); box-shadow:0 12px 24px rgba(212,58,134,.18)}
-    button:active{transform:translateY(0)}
-    button.primary{border-color:rgba(212,58,134,.55); background:linear-gradient(180deg, rgba(212,58,134,.40), rgba(212,58,134,.20))}
-    button.success{border-color:rgba(66,201,139,.35); background:linear-gradient(180deg, rgba(66,201,139,.22), rgba(66,201,139,.10)); color:#c9f6dd}
-    button.danger{border-color:rgba(234,90,106,.35); background:linear-gradient(180deg, rgba(234,90,106,.22), rgba(234,90,106,.10)); color:#ffd1d8}
-
-    main{padding:20px 0; display:flex; flex-direction:column; gap:16px}
-    .grid{display:grid; grid-template-columns: 2fr 1fr; gap:16px}
-    @media (max-width: 1100px){ .grid{grid-template-columns:1fr} }
-
-    .panel{
-      background:linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      display:flex; flex-direction:column;
-    }
-    .panel .head{
-      padding:16px 18px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px solid var(--border);
-      background:rgba(255,255,255,0.03);
-    }
-    .panel .head h2{
-      margin:0;
-      font-size:13px;
-      letter-spacing:.3px;
-      text-transform:uppercase;
-      color:#ffe6f2;
-    }
-    .panel .body{padding:16px 18px; flex:1; overflow:auto}
-    .panel .footer{padding:12px 18px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); background:rgba(255,255,255,0.01); line-height:1.5}
-
-    .chip{
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border2);
-      font-weight:900;
-      letter-spacing:.2px;
-      text-transform:uppercase;
-      font-size:10px;
-      white-space:nowrap;
-      background:rgba(212,58,134,0.16);
-      color:#ffe6f2;
-    }
-    .chip.ok{background:rgba(66,201,139,0.14); border-color:rgba(66,201,139,0.22); color:#c9f6dd}
-    .chip.med{background:rgba(240,192,67,0.16); border-color:rgba(240,192,67,0.26); color:#ffe6b8}
-    .chip.high{background:rgba(234,128,72,0.16); border-color:rgba(234,128,72,0.26); color:#ffd2b3}
-    .chip.crit{background:rgba(234,90,106,0.16); border-color:rgba(234,90,106,0.26); color:#ffd1d8}
-    .chip.info{background:rgba(212,58,134,0.16); border-color:rgba(212,58,134,0.26); color:#ffe6f2}
-
-    .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-    @media (max-width: 800px){ .kpis{grid-template-columns:repeat(2,1fr)} }
-    @media (max-width: 520px){ .kpis{grid-template-columns:1fr} }
-    .card{
-      background:linear-gradient(160deg, rgba(212,58,134,0.12), rgba(0,0,0,0.35));
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:14px;
-      min-height:110px;
-      display:flex; flex-direction:column; gap:8px;
-      transition:all .2s ease;
-    }
-    .card:hover{border-color:rgba(212,58,134,0.35); background:linear-gradient(160deg, rgba(212,58,134,0.18), rgba(0,0,0,0.45))}
-    .card .label{color:var(--muted); font-size:12px; font-weight:900}
-    .card .value{font-size:28px; font-weight:1000; color:#fff}
-    .card .meta{display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:11px; color:var(--muted)}
-
-    .divider{height:1px;background:var(--border); margin:16px 0}
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      border-radius:14px;
-      border:1px solid var(--border);
-      overflow:hidden;
-      background:rgba(0,0,0,0.25);
-    }
-    th, td{padding:12px; border-bottom:1px solid var(--border); vertical-align:middle; font-size:13px}
-    th{
-      position:sticky; top:0; z-index:5;
-      text-align:left;
-      font-size:11px; letter-spacing:.2px; text-transform:uppercase;
-      color:#ffe6f2;
-      background:rgba(255,255,255,0.04);
-    }
-    tbody tr{transition:all .2s ease}
-    tbody tr:hover{background:rgba(212,58,134,0.08)}
-    .muted{color:var(--muted)}
-    .mono{font-family:var(--mono)}
-
-    input[type="text"], input[type="number"], select{
-      width:100%;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.12);
-      background:rgba(0,0,0,0.28);
-      color:var(--text);
-      padding:10px;
-      outline:none;
-      font-size:13px;
-      transition:all .2s ease;
-    }
-    input:focus, select:focus{
-      border-color:rgba(212,58,134,0.55);
-      background:rgba(212,58,134,0.08);
-      box-shadow:0 0 0 3px rgba(212,58,134,0.18);
-    }
-
-    .field{
-      background:rgba(0,0,0,0.28);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .field label{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:1000;
-      text-transform:uppercase;
-      letter-spacing:.2px;
-    }
-
-    .qtitle{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
-    }
-    .qtitle .req{color:#ffe6f2; font-size:11px; font-weight:900; border:1px solid var(--border2); border-radius:999px; padding:4px 8px; background:rgba(212,58,134,0.14)}
-    .options{display:grid; gap:10px}
-    .opt{
-      display:flex; gap:10px; align-items:center;
-      padding:10px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,0.20);
-    }
-    .opt input{margin:0}
-    .opt span{font-size:13px}
-    .opt:hover{border-color:rgba(212,58,134,0.30); background:rgba(0,0,0,0.26)}
-
-    .form-grid{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
-    @media (max-width: 900px){ .form-grid{grid-template-columns:1fr} }
-
-    .hint{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:12px;
-      border-left:3px solid rgba(91,140,255,0.35);
-      background:rgba(91,140,255,0.08);
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-    }
-
-    .badge{
-      display:inline-block;
-      padding:4px 8px;
-      border-radius:8px;
-      font-size:11px;
-      font-weight:900;
-      border:1px solid var(--border2);
-      background:rgba(255,255,255,0.05);
-      color:var(--muted);
-    }
-    .badge.success{background:rgba(66,201,139,0.14); border-color:rgba(66,201,139,0.22); color:#c9f6dd}
-    .badge.danger{background:rgba(234,90,106,0.14); border-color:rgba(234,90,106,0.22); color:#ffd1d8}
-    .badge.warning{background:rgba(240,192,67,0.14); border-color:rgba(240,192,67,0.22); color:#ffe6b8}
-
-    .row-actions{display:flex; gap:8px; justify-content:flex-end}
-    .btn-small{
-      padding:8px 10px;
-      border-radius:10px;
-      font-weight:1000;
-      font-size:11px;
-      border:1px solid var(--border2);
-      background:rgba(255,255,255,0.05);
-      color:var(--text);
-      cursor:pointer;
-    }
-    .btn-small.danger{border-color:rgba(234,90,106,0.35); color:#ffd1d8; background:rgba(234,90,106,0.12)}
-
-    .vendor-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap:14px;
-    }
-    .vendor-card{
-      background:linear-gradient(135deg, rgba(212,58,134,0.12), rgba(242,195,107,0.08));
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:14px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      transition:all .2s ease;
-    }
-    .vendor-card:hover{
-      border-color:rgba(212,58,134,0.35);
-      background:linear-gradient(135deg, rgba(212,58,134,0.16), rgba(242,195,107,0.10));
-      box-shadow:0 8px 20px rgba(212,58,134,0.18);
-    }
-    .vendor-header{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
-    .vendor-title{display:flex; flex-direction:column; gap:4px}
-    .vendor-title h3{margin:0; font-size:15px; font-weight:1000; color:#fff}
-    .vendor-title .role{color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.2px}
-    .vendor-chip{
-      padding:4px 8px;
-      border-radius:10px;
-      font-size:10px;
-      font-weight:1000;
-      background:rgba(212,58,134,0.20);
-      border:1px solid rgba(212,58,134,0.34);
-      color:#ffe6f2;
-      white-space:nowrap;
-    }
-    .vendor-metrics{display:grid; grid-template-columns:1fr 1fr; gap:8px}
-    .vendor-metric{
-      background:rgba(0,0,0,0.22);
-      border:1px solid var(--border);
-      border-radius:10px;
-      padding:8px;
-      display:flex; flex-direction:column; gap:4px;
-    }
-    .vendor-metric .label{font-size:10px; color:var(--muted); font-weight:1000; text-transform:uppercase}
-    .vendor-metric .value{font-size:16px; font-weight:1100; color:#fff}
-    .vendor-metric .status{font-size:10px; color:var(--muted)}
-    .vendor-footer{display:flex; gap:6px; flex-wrap:wrap}
-
-    .compare-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-bottom:12px;
-    }
-    @media (max-width: 900px){ .compare-grid{grid-template-columns:1fr} }
-    .compare-summary{
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:rgba(12,22,44,0.55);
-      overflow:hidden;
-    }
-    .compare-summary table{border:none; background:transparent}
-    .compare-summary th, .compare-summary td{font-size:12px; padding:10px}
-
-    .progress{
-      height:10px;
-      background:rgba(255,255,255,0.08);
-      border:1px solid var(--border);
-      border-radius:999px;
-      overflow:hidden;
-    }
-    .progress > div{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, rgba(212,58,134,0.95), rgba(242,195,107,0.95));
-    }
-
-    .alert{
-      padding:12px;
-      border-radius:12px;
-      font-size:12px;
-      border-left:3px solid rgba(212,58,134,0.35);
-      background:rgba(255,255,255,0.04);
-      color:#ffe6f2;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
@@ -410,14 +46,14 @@
 
         <div class="panel" style="background:transparent;border:none;box-shadow:none">
           <div class="head" style="border:1px solid var(--border);border-radius:14px 14px 0 0">
-            <h2>Antes vs Después</h2>
-            <span class="muted mono" style="font-size:11px">Comparación con baseline</span>
+            <h2>Antes vs DespuÃ©s</h2>
+            <span class="muted mono" style="font-size:11px">ComparaciÃ³n con baseline</span>
           </div>
           <div class="body" style="border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:0">
             <table>
               <thead>
                 <tr>
-                  <th>Métrica</th>
+                  <th>MÃ©trica</th>
                   <th>Baseline</th>
                   <th>Actual</th>
                   <th>Cambio</th>
@@ -430,7 +66,7 @@
         </div>
 
         <div class="hint">
-          “Ofrecer más de un producto” (P8) y “Cross-selling” (P9) se miden como tasas del equipo. La confianza (P13) usa escala 1–5.
+          â€œOfrecer mÃ¡s de un productoâ€ (P8) y â€œCross-sellingâ€ (P9) se miden como tasas del equipo. La confianza (P13) usa escala 1â€“5.
         </div>
       </div>
 
@@ -441,12 +77,12 @@
     <aside class="panel">
       <div class="head">
         <h2>Metas (targets)</h2>
-        <span class="muted mono" id="lastSaved" style="font-size:11px">—</span>
+        <span class="muted mono" id="lastSaved" style="font-size:11px">â€”</span>
       </div>
       <div class="body">
         <div class="form-grid">
           <div class="field">
-            <label>Meta conversión 1er contacto (%)</label>
+            <label>Meta conversiÃ³n 1er contacto (%)</label>
             <input id="tConv" type="number" min="0" max="100" step="1" value="100" />
           </div>
 
@@ -514,7 +150,7 @@
         </div>
 
         <div class="hint">
-          Chips: OK (≥100%), MED (90–99%), HIGH (70–89%), CRIT (&lt;70%). En “tiempo de cierre”, OK significa menor o igual a la meta.
+          Chips: OK (â‰¥100%), MED (90â€“99%), HIGH (70â€“89%), CRIT (&lt;70%). En â€œtiempo de cierreâ€, OK significa menor o igual a la meta.
         </div>
       </div>
     </aside>
@@ -522,7 +158,7 @@
 
   <section class="panel">
     <div class="head">
-      <h2>Formulario (2–13)</h2>
+      <h2>Formulario (2â€“13)</h2>
       <span class="muted" style="font-size:12px">Llena y guarda una respuesta por vendedor</span>
     </div>
 
@@ -533,7 +169,7 @@
             <label>1. Nombre del vendedor</label>
             <span class="req">Requerido</span>
           </div>
-          <input id="fName" type="text" placeholder="Ej. Juan Pérez" />
+          <input id="fName" type="text" placeholder="Ej. Juan PÃ©rez" />
         </div>
 
         <!-- 2 -->
@@ -544,7 +180,7 @@
           </div>
           <div class="options" id="qRole">
             <label class="opt"><input type="checkbox" value="Supervisor"> <span>SUPERVISOR</span></label>
-            <label class="opt"><input type="checkbox" value="Jefe de área"> <span>JEFE DE AREA</span></label>
+            <label class="opt"><input type="checkbox" value="Jefe de Ã¡rea"> <span>JEFE DE AREA</span></label>
             <label class="opt"><input type="checkbox" value="Vendedor"> <span>VENDEDOR</span></label>
             <label class="opt"><input type="checkbox" value="Aprendiz"> <span>APRENDIZ</span></label>
           </div>
@@ -553,7 +189,7 @@
         <!-- 3 -->
         <div class="field">
           <div class="qtitle">
-            <label>3. ÁREA O CANAL</label>
+            <label>3. ÃREA O CANAL</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qArea">
@@ -572,7 +208,7 @@
           </div>
           <div class="options" id="qMainChannel">
             <label class="opt"><input type="radio" name="mainChannel" value="WhatsApp"> <span>WhatsApp</span></label>
-            <label class="opt"><input type="radio" name="mainChannel" value="Llamadas telefónicas"> <span>Llamadas telefónicas</span></label>
+            <label class="opt"><input type="radio" name="mainChannel" value="Llamadas telefÃ³nicas"> <span>Llamadas telefÃ³nicas</span></label>
             <label class="opt"><input type="radio" name="mainChannel" value="Ambos"> <span>Ambos</span></label>
           </div>
         </div>
@@ -580,28 +216,28 @@
         <!-- 5 -->
         <div class="field">
           <div class="qtitle">
-            <label>5. Años o meses de experiencia en ventas</label>
+            <label>5. AÃ±os o meses de experiencia en ventas</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qExp">
             <label class="opt"><input type="radio" name="exp" value="Entre 1-3 meses"> <span>Entre 1-3 meses</span></label>
             <label class="opt"><input type="radio" name="exp" value="Entre 3-6 meses"> <span>Entre 3-6 meses</span></label>
             <label class="opt"><input type="radio" name="exp" value="Entre 6-12 meses"> <span>Entre 6-12 meses</span></label>
-            <label class="opt"><input type="radio" name="exp" value="Más de un año"> <span>Más de un año</span></label>
+            <label class="opt"><input type="radio" name="exp" value="MÃ¡s de un aÃ±o"> <span>MÃ¡s de un aÃ±o</span></label>
           </div>
         </div>
 
         <!-- 6 -->
         <div class="field">
           <div class="qtitle">
-            <label>6. ¿Cuánto tiempo tardas en promedio en cerrar una venta?</label>
+            <label>6. Â¿CuÃ¡nto tiempo tardas en promedio en cerrar una venta?</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qCloseTime">
             <label class="opt"><input type="radio" name="closeTime" value="Menos de 10 minutos"> <span>Menos de 10 minutos</span></label>
             <label class="opt"><input type="radio" name="closeTime" value="Entre 10 y 15 minutos"> <span>Entre 10 y 15 minutos</span></label>
             <label class="opt"><input type="radio" name="closeTime" value="Entre 15 y 20 minutos"> <span>Entre 15 y 20 minutos</span></label>
-            <label class="opt"><input type="radio" name="closeTime" value="Más de 20 minutos"> <span>Más de 20 minutos</span></label>
+            <label class="opt"><input type="radio" name="closeTime" value="MÃ¡s de 20 minutos"> <span>MÃ¡s de 20 minutos</span></label>
             <label class="opt"><input type="radio" name="closeTime" value="Generalmente no cierro en el primer contacto"> <span>Generalmente no cierro en el primer contacto</span></label>
           </div>
         </div>
@@ -609,11 +245,11 @@
         <!-- 7 -->
         <div class="field">
           <div class="qtitle">
-            <label>7. ¿Cierras la venta en el primer contacto con el cliente?</label>
+            <label>7. Â¿Cierras la venta en el primer contacto con el cliente?</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qClose1st">
-            <label class="opt"><input type="radio" name="close1st" value="Sí"> <span>Sí</span></label>
+            <label class="opt"><input type="radio" name="close1st" value="SÃ­"> <span>SÃ­</span></label>
             <label class="opt"><input type="radio" name="close1st" value="No"> <span>No</span></label>
           </div>
         </div>
@@ -621,7 +257,7 @@
         <!-- 8 -->
         <div class="field">
           <div class="qtitle">
-            <label>8. ¿Sueles ofrecer más de un producto por venta?</label>
+            <label>8. Â¿Sueles ofrecer mÃ¡s de un producto por venta?</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qUpsell">
@@ -634,11 +270,11 @@
         <!-- 9 -->
         <div class="field">
           <div class="qtitle">
-            <label>9. ¿Aplicás cross-selling (combos, productos complementarios)?</label>
+            <label>9. Aplicas cross-selling (combos, productos complementarios)?</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qCross">
-            <label class="opt"><input type="radio" name="cross" value="Sí"> <span>Sí</span></label>
+            <label class="opt"><input type="radio" name="cross" value="SÃ­"> <span>SÃ­</span></label>
             <label class="opt"><input type="radio" name="cross" value="A veces"> <span>A veces</span></label>
             <label class="opt"><input type="radio" name="cross" value="No"> <span>No</span></label>
           </div>
@@ -651,7 +287,7 @@
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qFollow">
-            <label class="opt"><input type="radio" name="follow" value="Sí"> <span>Sí</span></label>
+            <label class="opt"><input type="radio" name="follow" value="SÃ­"> <span>SÃ­</span></label>
             <label class="opt"><input type="radio" name="follow" value="No"> <span>No</span></label>
           </div>
         </div>
@@ -659,14 +295,14 @@
         <!-- 11 -->
         <div class="field">
           <div class="qtitle">
-            <label>11. ¿Cuántas veces haces seguimiento a un cliente indeciso?</label>
+            <label>11. Cuantas veces haces seguimiento a un cliente indeciso?</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qFollowTimes">
             <label class="opt"><input type="radio" name="followTimes" value="No hago seguimiento"> <span>No hago seguimiento</span></label>
             <label class="opt"><input type="radio" name="followTimes" value="1 vez"> <span>1 vez</span></label>
             <label class="opt"><input type="radio" name="followTimes" value="2 a 3 veces"> <span>2 a 3 veces</span></label>
-            <label class="opt"><input type="radio" name="followTimes" value="Más de 3 veces"> <span>Más de 3 veces</span></label>
+            <label class="opt"><input type="radio" name="followTimes" value="MÃ¡s de 3 veces"> <span>MÃ¡s de 3 veces</span></label>
           </div>
         </div>
 
@@ -677,8 +313,8 @@
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qPitch">
-            <label class="opt"><input type="radio" name="pitch" value="Sí"> <span>Sí</span></label>
-            <label class="opt"><input type="radio" name="pitch" value="Más o menos"> <span>Más o menos</span></label>
+            <label class="opt"><input type="radio" name="pitch" value="SÃ­"> <span>SÃ­</span></label>
+            <label class="opt"><input type="radio" name="pitch" value="MÃ¡s o menos"> <span>MÃ¡s o menos</span></label>
             <label class="opt"><input type="radio" name="pitch" value="No"> <span>No</span></label>
           </div>
         </div>
@@ -686,7 +322,7 @@
         <!-- 13 -->
         <div class="field" style="grid-column:1/-1">
           <div class="qtitle">
-            <label>13. ¿Qué tan seguro(a) te sientes al vender? (1–5)</label>
+            <label>13. ¿Que tan seguro(a) te sientes al vender? 1-5</label>
             <span class="req">Requerido</span>
           </div>
           <div class="options" id="qConfidence">
@@ -700,21 +336,21 @@
       </div>
 
       <div class="hint">
-        Al presionar “Guardar respuesta” se crea/actualiza el vendedor en la tabla y se recalculan KPI automáticamente.
+        Al presionar Guardar respuestaâ€ se crea/actualiza el vendedor en la tabla y se recalculan KPI automÃ¡ticamente.
       </div>
     </div>
   </section>
 
   <section class="panel">
     <div class="head">
-      <h2>Análisis individual</h2>
+      <h2>AnÃ¡lisis individual</h2>
       <span class="muted" style="font-size:12px">Score, cumplimiento y ranking</span>
     </div>
     <div class="body">
       <div class="vendor-grid" id="vendorContainer"></div>
     </div>
     <div class="footer">
-      El Score (0–100) pondera conversión, confianza, upsell, cross-selling, seguimiento, # seguimientos, pitch y experiencia.
+      El Score (0â€“100) pondera conversiÃ³n, confianza, upsell, cross-selling, seguimiento, # seguimientos, pitch y experiencia.
     </div>
   </section>
 
@@ -741,7 +377,7 @@
   <section class="panel">
     <div class="head">
       <h2>Base de respuestas</h2>
-      <span class="muted" style="font-size:12px">Editable • Recalcula al instante</span>
+      <span class="muted" style="font-size:12px">Editable â€¢ Recalcula al instante</span>
     </div>
     <div class="body">
       <table>
@@ -750,7 +386,7 @@
             <th style="min-width:60px">ID</th>
             <th style="min-width:180px">Nombre</th>
             <th style="min-width:140px">Rol</th>
-            <th style="min-width:140px">Área/Canal</th>
+            <th style="min-width:140px">Ãrea/Canal</th>
             <th style="min-width:160px">Canal principal</th>
             <th style="min-width:120px">Experiencia</th>
             <th style="min-width:180px">Tiempo cierre</th>
@@ -760,7 +396,7 @@
             <th style="min-width:120px">Seguimiento</th>
             <th style="min-width:140px"># Seg.</th>
             <th style="min-width:140px">Speech</th>
-            <th style="min-width:110px">Conf (1–5)</th>
+            <th style="min-width:110px">Conf (1â€“5)</th>
             <th style="min-width:90px">Score</th>
             <th style="min-width:120px; text-align:right">Acciones</th>
           </tr>
@@ -775,866 +411,8 @@
   </div>
 </main>
 
-<script>
-  const STORAGE_KEY  = "kpi_form_vendedores_v1";
-  const BASELINE_KEY = "kpi_form_vendedores_baseline_v1";
-  const TARGETS_VERSION = 2;
-  const TARGET_DEFAULTS = {
-    conv: 100,
-    conf: 5,
-    upsell: 100,
-    cross: 100,
-    follow: 100,
-    avgFU: 4,
-    pitch: 100,
-    exp: 14,
-    closeMin: 8,
-  };
-  const TARGET_OPTIONS = {
-    conf: [1,2,3,4,5],
-    avgFU: [0,1,2.5,4],
-    exp: [2,4.5,9,14],
-    closeMin: [8,12.5,17.5,25,40],
-  };
-
-  // Ponderaciones del Score (suma ~1.0)
-  const WEIGHTS = {
-    conv: 0.18,        // P7
-    conf: 0.16,        // P13
-    upsell: 0.12,      // P8
-    cross: 0.12,       // P9
-    follow: 0.12,      // P10
-    followTimes: 0.10, // P11
-    pitch: 0.10,       // P12
-    exp: 0.10,         // P5
-  };
-
-  const els = {
-    teamBody: document.getElementById("teamBody"),
-    kpiCards: document.getElementById("kpiCards"),
-    chipTeam: document.getElementById("chipTeam"),
-    beforeAfterBody: document.getElementById("beforeAfterBody"),
-    vendorContainer: document.getElementById("vendorContainer"),
-    lastSaved: document.getElementById("lastSaved"),
-    compareA: document.getElementById("compareA"),
-    compareB: document.getElementById("compareB"),
-    compareSummary: document.getElementById("compareSummary"),
-    btnShare: document.getElementById("btnShare"),
-    btnClearLink: document.getElementById("btnClearLink"),
-
-    fName: document.getElementById("fName"),
-
-    t: {
-      conv: document.getElementById("tConv"),
-      conf: document.getElementById("tConf"),
-      upsell: document.getElementById("tUpsell"),
-      cross: document.getElementById("tCross"),
-      follow: document.getElementById("tFollow"),
-      avgFU: document.getElementById("tAvgFU"),
-      pitch: document.getElementById("tPitch"),
-      exp: document.getElementById("tExp"),
-      closeMin: document.getElementById("tCloseMin"),
-    }
-  };
-
-  let state = {
-    targets: getTargetsFromUI(),
-    team: []
-  };
-
-  function nowStr(){ return new Date().toLocaleString("es-PE"); }
-  function num(x){ const n = parseFloat(x); return Number.isFinite(n) ? n : 0; }
-  function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
-  function round2(x){ return (Math.round(num(x)*100)/100).toFixed(2); }
-  function pct(x){ return `${Math.round(num(x))}%`; }
-  function safeDiv(a,b){ return b ? (a/b) : 0; }
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll("\"","&quot;").replaceAll("'","&#039;");
-  }
-
-  function utf8ToBase64(str){
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) =>
-      String.fromCharCode(parseInt(p1, 16))
-    ));
-  }
-  function base64ToUtf8(str){
-    return decodeURIComponent(atob(str).split("").map(c =>
-      `%${c.charCodeAt(0).toString(16).padStart(2,"0")}`
-    ).join(""));
-  }
-
-  function getTargetsFromUI(){
-    return {
-      conv: num(els.t.conv.value),
-      conf: num(els.t.conf.value),
-      upsell: num(els.t.upsell.value),
-      cross: num(els.t.cross.value),
-      follow: num(els.t.follow.value),
-      avgFU: num(els.t.avgFU.value),
-      pitch: num(els.t.pitch.value),
-      exp: num(els.t.exp.value),
-      closeMin: num(els.t.closeMin.value),
-    };
-  }
-
-  function normalizeOption(value, options, fallback){
-    if(value === undefined || value === null || value === "") return fallback;
-    const v = num(value);
-    return options.some(o => o === v) ? v : fallback;
-  }
-
-  function pickNumber(value, fallback){
-    return (value === undefined || value === null || value === "") ? fallback : num(value);
-  }
-
-  function normalizeTargets(input){
-    const t = input || {};
-    return {
-      conv: clamp(pickNumber(t.conv, TARGET_DEFAULTS.conv), 0, 100),
-      conf: normalizeOption(t.conf, TARGET_OPTIONS.conf, TARGET_DEFAULTS.conf),
-      upsell: clamp(pickNumber(t.upsell, TARGET_DEFAULTS.upsell), 0, 100),
-      cross: clamp(pickNumber(t.cross, TARGET_DEFAULTS.cross), 0, 100),
-      follow: clamp(pickNumber(t.follow, TARGET_DEFAULTS.follow), 0, 100),
-      avgFU: normalizeOption(t.avgFU, TARGET_OPTIONS.avgFU, TARGET_DEFAULTS.avgFU),
-      pitch: clamp(pickNumber(t.pitch, TARGET_DEFAULTS.pitch), 0, 100),
-      exp: normalizeOption(t.exp, TARGET_OPTIONS.exp, TARGET_DEFAULTS.exp),
-      closeMin: normalizeOption(t.closeMin, TARGET_OPTIONS.closeMin, TARGET_DEFAULTS.closeMin),
-    };
-  }
-
-  function applyTargetsToUI(t){
-    els.t.conv.value = t.conv;
-    els.t.conf.value = t.conf;
-    els.t.upsell.value = t.upsell;
-    els.t.cross.value = t.cross;
-    els.t.follow.value = t.follow;
-    els.t.avgFU.value = t.avgFU;
-    els.t.pitch.value = t.pitch;
-    els.t.exp.value = t.exp;
-    els.t.closeMin.value = t.closeMin;
-  }
-
-  function statusChip(actual, target, mode="higher-better"){
-    if(!target || target === 0) return { cls:"chip info", text:"INFO" };
-
-    let ach = 0;
-    if(mode === "lower-better"){
-      ach = (actual === 0) ? 1 : (target / actual);
-    }else{
-      ach = actual / target;
-    }
-
-    if(ach >= 1) return { cls:"chip ok", text:"OK" };
-    if(ach >= 0.9) return { cls:"chip med", text:"MED" };
-    if(ach >= 0.7) return { cls:"chip high", text:"HIGH" };
-    return { cls:"chip crit", text:"CRIT" };
-  }
-
-  // Helpers formulario
-  function getCheckedValues(containerId){
-    const box = document.getElementById(containerId);
-    return Array.from(box.querySelectorAll('input[type="checkbox"]:checked')).map(x => x.value);
-  }
-  function getRadioValue(name){
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? el.value : "";
-  }
-
-  // Mapas a números
-  function expToMonths(label){
-    switch(label){
-      case "Entre 1-3 meses": return 2;
-      case "Entre 3-6 meses": return 4.5;
-      case "Entre 6-12 meses": return 9;
-      case "Más de un año": return 14;
-      default: return 0;
-    }
-  }
-  function closeTimeToMinutes(label){
-    switch(label){
-      case "Menos de 10 minutos": return 8;
-      case "Entre 10 y 15 minutos": return 12.5;
-      case "Entre 15 y 20 minutos": return 17.5;
-      case "Más de 20 minutos": return 25;
-      case "Generalmente no cierro en el primer contacto": return 40;
-      default: return 0;
-    }
-  }
-  function followTimesToNumber(label){
-    switch(label){
-      case "No hago seguimiento": return 0;
-      case "1 vez": return 1;
-      case "2 a 3 veces": return 2.5;
-      case "Más de 3 veces": return 4;
-      default: return 0;
-    }
-  }
-  function triTo01(label){
-    if(label === "Sí") return 1;
-    if(label === "A veces" || label === "Más o menos") return 0.5;
-    return 0;
-  }
-  function upsellTo01(label){
-    if(label === "Siempre") return 1;
-    if(label === "A veces") return 0.5;
-    return 0;
-  }
-
-  function activeTeam(){
-    return state.team.filter(r => String(r.name).trim().length > 0);
-  }
-
-  function computeTeamKPIs(){
-    const rows = activeTeam();
-    const n = rows.length;
-
-    const conv = safeDiv(rows.filter(r => r.close1st === "Sí").length, n) * 100;
-    const conf = safeDiv(rows.reduce((a,r)=>a+num(r.confidence),0), n);
-
-    const upsell = safeDiv(rows.filter(r => r.upsell === "Siempre").length, n) * 100;
-    const cross  = safeDiv(rows.filter(r => r.cross === "Sí").length, n) * 100;
-    const follow = safeDiv(rows.filter(r => r.follow === "Sí").length, n) * 100;
-
-    const avgFU = safeDiv(rows.reduce((a,r)=>a+num(r.followTimesN),0), n);
-    const pitch = safeDiv(rows.filter(r => r.pitch === "Sí").length, n) * 100;
-
-    const exp = safeDiv(rows.reduce((a,r)=>a+num(r.expMonths),0), n);
-    const closeMin = safeDiv(rows.reduce((a,r)=>a+num(r.closeMin),0), n);
-
-    return { n, conv, conf, upsell, cross, follow, avgFU, pitch, exp, closeMin };
-  }
-
-  // Score individual (0..100)
-  function computeVendorScore(v, t){
-    const conv01 = (v.close1st === "Sí") ? 1 : 0;
-    const conf01 = clamp(num(v.confidence) / 5, 0, 1);
-
-    const upsell01 = upsellTo01(v.upsell);
-    const cross01  = triTo01(v.cross);
-    const follow01 = (v.follow === "Sí") ? 1 : 0;
-
-    const followTimesNorm = t.avgFU > 0 ? clamp(num(v.followTimesN) / t.avgFU, 0, 1.2) : 0;
-    const followTimes01 = clamp(followTimesNorm / 1.2, 0, 1);
-
-    const pitch01 = triTo01(v.pitch);
-
-    const expNorm = t.exp > 0 ? clamp(num(v.expMonths) / t.exp, 0, 1.2) : 0;
-    const exp01 = clamp(expNorm / 1.2, 0, 1);
-
-    const score01 =
-      conv01 * WEIGHTS.conv +
-      conf01 * WEIGHTS.conf +
-      upsell01 * WEIGHTS.upsell +
-      cross01 * WEIGHTS.cross +
-      follow01 * WEIGHTS.follow +
-      followTimes01 * WEIGHTS.followTimes +
-      pitch01 * WEIGHTS.pitch +
-      exp01 * WEIGHTS.exp;
-
-    const score = clamp(score01 * 100, 0, 100);
-
-    return {
-      score: Math.round(score),
-      conv01, conf01, upsell01, cross01, follow01, followTimes01, pitch01, exp01
-    };
-  }
-
-  function renderKPIs(){
-    state.targets = getTargetsFromUI();
-    const k = computeTeamKPIs();
-
-    els.chipTeam.textContent = `EQUIPO ${k.n} ${k.n === 1 ? "vendedor" : "vendedores"}`;
-    const cards = [
-      { label:"Conversión 1er contacto", value:pct(k.conv), target:`Meta: ${state.targets.conv}%`, chip: statusChip(k.conv, state.targets.conv) },
-      { label:"Confianza Promedio", value:round2(k.conf), target:`Meta: ${state.targets.conf}`, chip: statusChip(k.conf, state.targets.conf) },
-      { label:"Upsell (P8)", value:pct(k.upsell), target:`Meta: ${state.targets.upsell}%`, chip: statusChip(k.upsell, state.targets.upsell) },
-      { label:"Cross-selling (P9)", value:pct(k.cross), target:`Meta: ${state.targets.cross}%`, chip: statusChip(k.cross, state.targets.cross) },
-      { label:"Seguimiento (P10)", value:pct(k.follow), target:`Meta: ${state.targets.follow}%`, chip: statusChip(k.follow, state.targets.follow) },
-      { label:"Prom. # Seguimientos", value:round2(k.avgFU), target:`Meta: ${state.targets.avgFU}`, chip: statusChip(k.avgFU, state.targets.avgFU) },
-      { label:"Pitch estructurado (P12)", value:pct(k.pitch), target:`Meta: ${state.targets.pitch}%`, chip: statusChip(k.pitch, state.targets.pitch) },
-      { label:"Experiencia Promedio (meses)", value:round2(k.exp), target:`Meta: ${state.targets.exp}`, chip: statusChip(k.exp, state.targets.exp) },
-      { label:"Tiempo cierre prom. (min)", value:round2(k.closeMin), target:`Meta: ≤ ${state.targets.closeMin}`, chip: statusChip(k.closeMin, state.targets.closeMin, "lower-better") },
-    ];
-
-    els.kpiCards.innerHTML = cards.map(c => `
-      <div class="card">
-        <div class="label">${c.label}</div>
-        <div class="value">${c.value}</div>
-        <div class="meta">
-          <div class="muted">${c.target}</div>
-          <span class="${c.chip.cls}">${c.chip.text}</span>
-        </div>
-      </div>
-    `).join("");
-
-    renderBeforeAfter(k);
-    renderVendorCards();
-    renderCompare();
-    saveStateDebounced();
-  }
-
-  function loadBaseline(){
-    try{
-      const raw = localStorage.getItem(BASELINE_KEY);
-      if(!raw) return null;
-      return JSON.parse(raw);
-    }catch(e){
-      return null;
-    }
-  }
-
-  function saveBaseline(){
-    const k = computeTeamKPIs();
-    const payload = { ...k, savedAt: nowStr() };
-    localStorage.setItem(BASELINE_KEY, JSON.stringify(payload));
-    renderKPIs();
-    alert(`Baseline guardado: ${payload.savedAt}`);
-  }
-
-  function renderBeforeAfter(k){
-    const b = loadBaseline();
-    const rows = [
-      { name:"Conversión 1er contacto", base:b?.conv, curr:k.conv, fmt:v=>pct(v) },
-      { name:"Confianza", base:b?.conf, curr:k.conf, fmt:v=>round2(v) },
-      { name:"Upsell (P8)", base:b?.upsell, curr:k.upsell, fmt:v=>pct(v) },
-      { name:"Cross-selling (P9)", base:b?.cross, curr:k.cross, fmt:v=>pct(v) },
-      { name:"Seguimiento (P10)", base:b?.follow, curr:k.follow, fmt:v=>pct(v) },
-      { name:"Prom. # Seguimientos", base:b?.avgFU, curr:k.avgFU, fmt:v=>round2(v) },
-      { name:"Pitch estructurado", base:b?.pitch, curr:k.pitch, fmt:v=>pct(v) },
-      { name:"Experiencia (meses)", base:b?.exp, curr:k.exp, fmt:v=>round2(v) },
-      { name:"Tiempo cierre (min)", base:b?.closeMin, curr:k.closeMin, fmt:v=>round2(v) },
-    ];
-
-    els.beforeAfterBody.innerHTML = rows.map(r => {
-      const hasBase = typeof r.base === "number";
-      const delta = hasBase ? (r.curr - r.base) : 0;
-
-      // Para tiempo de cierre, mejora = bajar minutos
-      const isCloseTime = r.name.includes("Tiempo cierre");
-      const adjDelta = isCloseTime ? -delta : delta;
-
-      const pctCh = hasBase && r.base !== 0 ? (adjDelta / r.base) * 100 : 0;
-
-      const deltaStr = hasBase
-        ? (Math.abs(adjDelta) < 0.0001 ? "0" : (adjDelta > 0 ? `+${round2(adjDelta)}` : `${round2(adjDelta)}`))
-        : "—";
-
-      const pctStr = hasBase
-        ? (Math.abs(pctCh) < 0.0001 ? "0%" : (pctCh > 0 ? `+${Math.round(pctCh)}%` : `${Math.round(pctCh)}%`))
-        : "—";
-
-      const cls =
-        !hasBase ? "" :
-        pctCh > 0 ? "success" :
-        pctCh < 0 ? "danger" : "";
-
-      return `
-        <tr>
-          <td><strong>${r.name}</strong></td>
-          <td class="muted">${hasBase ? r.fmt(r.base) : "—"}</td>
-          <td>${r.fmt(r.curr)}</td>
-          <td>${deltaStr}</td>
-          <td>${hasBase ? `<span class="badge ${cls}">${pctStr}</span>` : "—"}</td>
-        </tr>
-      `;
-    }).join("");
-  }
-
-  function renderVendorCards(){
-    const vendors = activeTeam();
-    if(!vendors.length){
-      els.vendorContainer.innerHTML = `<div class="alert" style="grid-column:1/-1">Guarda una respuesta para ver el análisis individual.</div>`;
-      return;
-    }
-
-    const t = getTargetsFromUI();
-    const computed = vendors.map(v => {
-      const s = computeVendorScore(v, t);
-
-      const b1 = (v.close1st === "Sí") ? ["✓ Cierra 1er contacto","success"] : ["✗ No cierra 1er contacto","danger"];
-      const b2 = (num(v.confidence) >= t.conf) ? ["✓ Confianza","success"] : ["⚠ Confianza","warning"];
-      const b3 = (v.follow === "Sí") ? ["✓ Seguimiento","success"] : ["✗ Seguimiento","danger"];
-      const b4 = (v.pitch === "Sí" || v.pitch === "Más o menos") ? ["✓ Speech","success"] : ["✗ Speech","danger"];
-
-      return { v, s, badges:[b1,b2,b3,b4] };
-    }).sort((a,b) => b.s.score - a.s.score);
-
-    els.vendorContainer.innerHTML = computed.map((item, idx) => {
-      const v = item.v, s = item.s;
-      const scoreChip = statusChip(s.score, 85); // meta interna score
-      const progress = clamp(s.score, 0, 100);
-
-      return `
-        <div class="vendor-card">
-          <div class="vendor-header">
-            <div class="vendor-title">
-              <h3>${escapeHtml(v.name)}</h3>
-              <span class="role">${escapeHtml(v.mainChannel)} • Ranking #${idx+1}</span>
-            </div>
-            <span class="vendor-chip">#${v.id}</span>
-          </div>
-
-          <div class="vendor-metrics">
-            <div class="vendor-metric">
-              <div class="label">Score</div>
-              <div class="value">${s.score}/100</div>
-              <div class="status"><span class="${scoreChip.cls}">${scoreChip.text}</span></div>
-            </div>
-            <div class="vendor-metric">
-              <div class="label">Confianza</div>
-              <div class="value">${round2(v.confidence)}/5</div>
-              <div class="status">Meta: ${t.conf}</div>
-            </div>
-            <div class="vendor-metric">
-              <div class="label">Experiencia</div>
-              <div class="value">${round2(v.expMonths)} meses</div>
-              <div class="status">${escapeHtml(v.expLabel)}</div>
-            </div>
-            <div class="vendor-metric">
-              <div class="label">Tiempo cierre</div>
-              <div class="value">${round2(v.closeMin)} min</div>
-              <div class="status">${escapeHtml(v.closeTime)}</div>
-            </div>
-          </div>
-
-          <div class="progress" aria-label="Progreso score"><div style="width:${progress}%"></div></div>
-
-          <div class="vendor-footer">
-            ${item.badges.map(b => `<span class="badge ${b[1]}">${b[0]}</span>`).join("")}
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  function renderCompare(){
-    if(!els.compareA || !els.compareB || !els.compareSummary) return;
-    const vendors = activeTeam();
-
-    if(vendors.length < 2){
-      els.compareA.innerHTML = "";
-      els.compareB.innerHTML = "";
-      els.compareSummary.innerHTML = `<div class="alert">Agrega al menos 2 vendedores para comparar.</div>`;
-      return;
-    }
-
-    const prevA = els.compareA.value;
-    const prevB = els.compareB.value;
-    const optionsHtml = vendors
-      .map(v => `<option value="${v.id}">${escapeHtml(v.name)} (#${v.id})</option>`)
-      .join("");
-
-    els.compareA.innerHTML = optionsHtml;
-    els.compareB.innerHTML = optionsHtml;
-
-    if(prevA && vendors.some(v => String(v.id) === prevA)) els.compareA.value = prevA;
-    if(prevB && vendors.some(v => String(v.id) === prevB)) els.compareB.value = prevB;
-
-    if(!els.compareA.value) els.compareA.value = String(vendors[0].id);
-    if(!els.compareB.value || els.compareB.value === els.compareA.value){
-      els.compareB.value = String(vendors[1].id);
-    }
-
-    const a = vendors.find(v => String(v.id) === els.compareA.value);
-    const b = vendors.find(v => String(v.id) === els.compareB.value);
-
-    if(!a || !b){
-      els.compareSummary.innerHTML = `<div class="alert">Selecciona dos vendedores distintos.</div>`;
-      return;
-    }
-
-    const t = getTargetsFromUI();
-    const sA = computeVendorScore(a, t);
-    const sB = computeVendorScore(b, t);
-
-    const rows = [
-      { label:"Score", a:`${sA.score}/100`, b:`${sB.score}/100` },
-      { label:"Confianza", a:round2(a.confidence), b:round2(b.confidence) },
-      { label:"Experiencia (meses)", a:round2(a.expMonths), b:round2(b.expMonths) },
-      { label:"Tiempo cierre (min)", a:round2(a.closeMin), b:round2(b.closeMin) },
-      { label:"Cierra 1er contacto", a:a.close1st || "-", b:b.close1st || "-" },
-      { label:"Upsell", a:a.upsell || "-", b:b.upsell || "-" },
-      { label:"Cross-selling", a:a.cross || "-", b:b.cross || "-" },
-      { label:"Seguimiento", a:a.follow || "-", b:b.follow || "-" },
-      { label:"# Seguimientos", a:a.followTimesLabel || "-", b:b.followTimesLabel || "-" },
-      { label:"Speech", a:a.pitch || "-", b:b.pitch || "-" },
-    ];
-
-    els.compareSummary.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Metrica</th>
-            <th>${escapeHtml(a.name)}</th>
-            <th>${escapeHtml(b.name)}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows.map(r => `
-            <tr>
-              <td class="muted"><strong>${r.label}</strong></td>
-              <td>${escapeHtml(r.a)}</td>
-              <td>${escapeHtml(r.b)}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    `;
-  }
-
-  function addOrUpdateVendorFromForm(){
-    const name = String(els.fName.value || "").trim();
-    if(!name){
-      alert("Ingresa el nombre del vendedor.");
-      return;
-    }
-
-    const role = getCheckedValues("qRole");
-    const area = getCheckedValues("qArea");
-
-    const mainChannel = getRadioValue("mainChannel");
-    const expLabel = getRadioValue("exp");
-    const closeTime = getRadioValue("closeTime");
-    const close1st = getRadioValue("close1st");
-    const upsell = getRadioValue("upsell");
-    const cross = getRadioValue("cross");
-    const follow = getRadioValue("follow");
-    const followTimesLabel = getRadioValue("followTimes");
-    const pitch = getRadioValue("pitch");
-    const conf = getRadioValue("conf");
-
-    const required = [mainChannel, expLabel, closeTime, close1st, upsell, cross, follow, followTimesLabel, pitch, conf];
-    if(required.some(x => !x)){
-      alert("Completa todas las preguntas requeridas (2–13).");
-      return;
-    }
-
-    const expMonths = expToMonths(expLabel);
-    const closeMin = closeTimeToMinutes(closeTime);
-    const followTimesN = followTimesToNumber(followTimesLabel);
-    const confidence = num(conf);
-
-    const existingIdx = state.team.findIndex(v => String(v.name).trim().toLowerCase() === name.toLowerCase());
-    const nextId = Math.max(0, ...state.team.map(v => num(v.id))) + 1;
-
-    const vendor = {
-      id: existingIdx >= 0 ? state.team[existingIdx].id : nextId,
-      name,
-      role: role.join(" | "),
-      area: area.join(" | "),
-      mainChannel,
-      expLabel,
-      expMonths,
-      closeTime,
-      closeMin,
-      close1st,
-      upsell,
-      cross,
-      follow,
-      followTimesLabel,
-      followTimesN,
-      pitch,
-      confidence,
-      score: 0,
-    };
-
-    const s = computeVendorScore(vendor, getTargetsFromUI());
-    vendor.score = s.score;
-
-    if(existingIdx >= 0) state.team[existingIdx] = vendor;
-    else state.team.push(vendor);
-
-    renderTable();
-    renderKPIs();
-    alert("Respuesta guardada.");
-  }
-
-  function renderTable(){
-    const t = getTargetsFromUI();
-    els.teamBody.innerHTML = state.team.map((v, idx) => {
-      const s = computeVendorScore(v, t);
-      v.score = s.score;
-
-      return `
-        <tr>
-          <td><input type="number" min="1" step="1" value="${num(v.id)}" data-k="id" data-i="${idx}"></td>
-          <td><input type="text" value="${escapeHtml(v.name)}" data-k="name" data-i="${idx}"></td>
-          <td><input type="text" value="${escapeHtml(v.role)}" data-k="role" data-i="${idx}"></td>
-          <td><input type="text" value="${escapeHtml(v.area)}" data-k="area" data-i="${idx}"></td>
-          <td><input type="text" value="${escapeHtml(v.mainChannel)}" data-k="mainChannel" data-i="${idx}"></td>
-          <td><input type="text" value="${escapeHtml(v.expLabel)}" data-k="expLabel" data-i="${idx}"></td>
-          <td><input type="text" value="${escapeHtml(v.closeTime)}" data-k="closeTime" data-i="${idx}"></td>
-          <td>
-            <select data-k="close1st" data-i="${idx}">
-              <option value="Sí" ${v.close1st==="Sí"?"selected":""}>Sí</option>
-              <option value="No" ${v.close1st==="No"?"selected":""}>No</option>
-            </select>
-          </td>
-          <td>
-            <select data-k="upsell" data-i="${idx}">
-              <option value="Siempre" ${v.upsell==="Siempre"?"selected":""}>Siempre</option>
-              <option value="A veces" ${v.upsell==="A veces"?"selected":""}>A veces</option>
-              <option value="Nunca" ${v.upsell==="Nunca"?"selected":""}>Nunca</option>
-            </select>
-          </td>
-          <td>
-            <select data-k="cross" data-i="${idx}">
-              <option value="Sí" ${v.cross==="Sí"?"selected":""}>Sí</option>
-              <option value="A veces" ${v.cross==="A veces"?"selected":""}>A veces</option>
-              <option value="No" ${v.cross==="No"?"selected":""}>No</option>
-            </select>
-          </td>
-          <td>
-            <select data-k="follow" data-i="${idx}">
-              <option value="Sí" ${v.follow==="Sí"?"selected":""}>Sí</option>
-              <option value="No" ${v.follow==="No"?"selected":""}>No</option>
-            </select>
-          </td>
-          <td>
-            <select data-k="followTimesLabel" data-i="${idx}">
-              <option value="No hago seguimiento" ${v.followTimesLabel==="No hago seguimiento"?"selected":""}>No hago seguimiento</option>
-              <option value="1 vez" ${v.followTimesLabel==="1 vez"?"selected":""}>1 vez</option>
-              <option value="2 a 3 veces" ${v.followTimesLabel==="2 a 3 veces"?"selected":""}>2 a 3 veces</option>
-              <option value="Más de 3 veces" ${v.followTimesLabel==="Más de 3 veces"?"selected":""}>Más de 3 veces</option>
-            </select>
-          </td>
-          <td>
-            <select data-k="pitch" data-i="${idx}">
-              <option value="Sí" ${v.pitch==="Sí"?"selected":""}>Sí</option>
-              <option value="Más o menos" ${v.pitch==="Más o menos"?"selected":""}>Más o menos</option>
-              <option value="No" ${v.pitch==="No"?"selected":""}>No</option>
-            </select>
-          </td>
-          <td>
-            <select data-k="confidence" data-i="${idx}">
-              ${[1,2,3,4,5].map(n => `<option value="${n}" ${num(v.confidence)===n?"selected":""}>${n}</option>`).join("")}
-            </select>
-          </td>
-          <td><strong>${s.score}</strong></td>
-          <td style="text-align:right">
-            <div class="row-actions">
-              <button class="btn-small danger" data-action="del" data-i="${idx}">Eliminar</button>
-            </div>
-          </td>
-        </tr>
-      `;
-    }).join("");
-  }
-
-  function recomputeDerivedFields(v){
-    v.expMonths = expToMonths(v.expLabel || "");
-    v.closeMin = closeTimeToMinutes(v.closeTime || "");
-    v.followTimesN = followTimesToNumber(v.followTimesLabel || "");
-    return v;
-  }
-
-  function delRow(i){
-    state.team.splice(i, 1);
-    renderTable();
-    renderKPIs();
-  }
-
-  let saveT = null;
-  function saveStateDebounced(){
-    clearTimeout(saveT);
-    saveT = setTimeout(saveState, 250);
-  }
-
-  function saveState(){
-    try{
-      const payload = { targets: getTargetsFromUI(), team: state.team, targetsVersion: TARGETS_VERSION };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      els.lastSaved.textContent = `Guardado: ${nowStr()}`;
-    }catch(e){
-      els.lastSaved.textContent = "Error al guardar";
-    }
-  }
-
-  function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return null;
-      return JSON.parse(raw);
-    }catch(e){
-      return null;
-    }
-  }
-
-  function makeShareLink(){
-    const payload = { targets: getTargetsFromUI(), team: state.team, targetsVersion: TARGETS_VERSION };
-    const encoded = utf8ToBase64(JSON.stringify(payload));
-    return `${location.origin}${location.pathname}#s=${encoded}`;
-  }
-
-  function applySharedState(encoded){
-    try{
-      const data = JSON.parse(base64ToUtf8(encoded));
-      const normalizedTargets = (data?.targetsVersion === TARGETS_VERSION)
-        ? normalizeTargets(data?.targets)
-        : normalizeTargets(TARGET_DEFAULTS);
-      applyTargetsToUI(normalizedTargets);
-      state.targets = normalizedTargets;
-      if(Array.isArray(data?.team)){
-        state.team = data.team.map(v => recomputeDerivedFields(v));
-      }
-      renderTable();
-      renderKPIs();
-      saveState();
-      return true;
-    }catch(e){
-      return false;
-    }
-  }
-
-  function tryLoadFromShare(){
-    const hash = location.hash || "";
-    if(!hash.startsWith("#s=")) return false;
-    const encoded = hash.slice(3);
-    if(!encoded) return false;
-    return applySharedState(encoded);
-  }
-
-  function resetAll(){
-    if(!confirm("Esto borrará datos, metas y baseline. ¿Continuar?")) return;
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(BASELINE_KEY);
-    state = { targets: getTargetsFromUI(), team: [] };
-    renderTable();
-    renderKPIs();
-    els.lastSaved.textContent = "Sistema reiniciado";
-  }
-
-  function exportCSV(){
-    const headers = [
-      "ID","Nombre","Rol","Área/Canal","Canal principal","Experiencia","Meses experiencia",
-      "Tiempo cierre","Min cierre","Cierra 1er contacto","Upsell","Cross-selling",
-      "Seguimiento","# Seguimientos","Speech","Confianza (1-5)","Score"
-    ];
-
-    const t = getTargetsFromUI();
-    const rows = state.team.map(v => {
-      recomputeDerivedFields(v);
-      const s = computeVendorScore(v, t);
-      return [
-        v.id, v.name, v.role, v.area, v.mainChannel, v.expLabel, v.expMonths,
-        v.closeTime, v.closeMin, v.close1st, v.upsell, v.cross,
-        v.follow, v.followTimesLabel, v.pitch, v.confidence, s.score
-      ];
-    });
-
-    const csv = [headers, ...rows]
-      .map(arr => arr.map(x => `"${String(x ?? "").replaceAll('"','""')}"`).join(","))
-      .join("\n");
-
-    const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `kpi_form_vendedores_${new Date().toISOString().slice(0,10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  // Eventos
-  document.getElementById("btnSaveForm").addEventListener("click", addOrUpdateVendorFromForm);
-  document.getElementById("btnBaseline").addEventListener("click", saveBaseline);
-  document.getElementById("btnExport").addEventListener("click", exportCSV);
-  document.getElementById("btnReset").addEventListener("click", resetAll);
-  if(els.btnShare){
-    els.btnShare.addEventListener("click", () => {
-      const link = makeShareLink();
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(link)
-          .then(() => alert("Enlace copiado. Abrelo en otro dispositivo para ver los mismos datos."))
-          .catch(() => prompt("Copia este enlace:", link));
-      }else{
-        prompt("Copia este enlace:", link);
-      }
-    });
-  }
-  if(els.btnClearLink){
-    els.btnClearLink.addEventListener("click", () => {
-      history.replaceState(null, "", location.pathname + location.search);
-      alert("Enlace compartido eliminado.");
-    });
-  }
-
-  if(els.compareA) els.compareA.addEventListener("change", renderCompare);
-  if(els.compareB) els.compareB.addEventListener("change", renderCompare);
-
-  els.teamBody.addEventListener("input", (e) => {
-    const el = e.target;
-    const i = parseInt(el.dataset.i, 10);
-    const k = el.dataset.k;
-    if(Number.isNaN(i) || !k) return;
-
-    state.team[i][k] = el.value;
-
-    if(k === "expLabel" || k === "closeTime" || k === "followTimesLabel"){
-      recomputeDerivedFields(state.team[i]);
-    }
-    if(k === "confidence"){
-      state.team[i][k] = num(el.value);
-    }
-    renderKPIs();
-  });
-
-  els.teamBody.addEventListener("change", (e) => {
-    const el = e.target;
-    const i = parseInt(el.dataset.i, 10);
-    const k = el.dataset.k;
-    if(Number.isNaN(i) || !k) return;
-
-    state.team[i][k] = el.value;
-
-    if(k === "expLabel" || k === "closeTime" || k === "followTimesLabel"){
-      recomputeDerivedFields(state.team[i]);
-    }
-    if(k === "confidence"){
-      state.team[i][k] = num(el.value);
-    }
-    renderKPIs();
-  });
-
-  els.teamBody.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-action]");
-    if(!btn) return;
-    const action = btn.dataset.action;
-    const i = parseInt(btn.dataset.i, 10);
-    if(action === "del") delRow(i);
-  });
-
-  Object.values(els.t).forEach(inp => {
-    inp.addEventListener("input", renderKPIs);
-    inp.addEventListener("change", renderKPIs);
-  });
-
-  // Init
-  (function init(){
-    const loadedFromShare = tryLoadFromShare();
-    if(!loadedFromShare){
-      const loaded = loadState();
-      const normalizedTargets = (loaded?.targetsVersion === TARGETS_VERSION)
-        ? normalizeTargets(loaded?.targets)
-        : normalizeTargets(TARGET_DEFAULTS);
-      applyTargetsToUI(normalizedTargets);
-      state.targets = normalizedTargets;
-
-      if(Array.isArray(loaded?.team)){
-        state.team = loaded.team.map(v => recomputeDerivedFields(v));
-      }
-
-      renderTable();
-      renderKPIs();
-    }
-
-    const base = loadBaseline();
-    if(base?.savedAt) els.lastSaved.textContent = `Baseline: ${base.savedAt}`;
-  })();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/app.js" defer></script>
 </body>
 </html>
+
