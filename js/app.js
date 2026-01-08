@@ -200,13 +200,13 @@
     return el ? el.value : "";
   }
 
-  // Mapas a nÃºmeros
+  // Mapas a números
   function expToMonths(label){
     switch(label){
       case "Entre 1-3 meses": return 2;
       case "Entre 3-6 meses": return 4.5;
       case "Entre 6-12 meses": return 9;
-      case "MÃ¡s de un aÃ±o": return 14;
+      case "Más de un año": return 14;
       default: return 0;
     }
   }
@@ -215,7 +215,7 @@
       case "Menos de 10 minutos": return 8;
       case "Entre 10 y 15 minutos": return 12.5;
       case "Entre 15 y 20 minutos": return 17.5;
-      case "MÃ¡s de 20 minutos": return 25;
+      case "Más de 20 minutos": return 25;
       case "Generalmente no cierro en el primer contacto": return 40;
       default: return 0;
     }
@@ -225,13 +225,13 @@
       case "No hago seguimiento": return 0;
       case "1 vez": return 1;
       case "2 a 3 veces": return 2.5;
-      case "MÃ¡s de 3 veces": return 4;
+      case "Más de 3 veces": return 4;
       default: return 0;
     }
   }
   function triTo01(label){
-    if(label === "SÃ­") return 1;
-    if(label === "A veces" || label === "MÃ¡s o menos") return 0.5;
+    if(label === "Sí") return 1;
+    if(label === "A veces" || label === "Más o menos") return 0.5;
     return 0;
   }
   function upsellTo01(label){
@@ -248,15 +248,15 @@
     const rows = activeTeam();
     const n = rows.length;
 
-    const conv = safeDiv(rows.filter(r => r.close1st === "SÃ­").length, n) * 100;
+    const conv = safeDiv(rows.filter(r => r.close1st === "Sí").length, n) * 100;
     const conf = safeDiv(rows.reduce((a,r)=>a+num(r.confidence),0), n);
 
     const upsell = safeDiv(rows.filter(r => r.upsell === "Siempre").length, n) * 100;
-    const cross  = safeDiv(rows.filter(r => r.cross === "SÃ­").length, n) * 100;
-    const follow = safeDiv(rows.filter(r => r.follow === "SÃ­").length, n) * 100;
+    const cross  = safeDiv(rows.filter(r => r.cross === "Sí").length, n) * 100;
+    const follow = safeDiv(rows.filter(r => r.follow === "Sí").length, n) * 100;
 
     const avgFU = safeDiv(rows.reduce((a,r)=>a+num(r.followTimesN),0), n);
-    const pitch = safeDiv(rows.filter(r => r.pitch === "SÃ­").length, n) * 100;
+    const pitch = safeDiv(rows.filter(r => r.pitch === "Sí").length, n) * 100;
 
     const exp = safeDiv(rows.reduce((a,r)=>a+num(r.expMonths),0), n);
     const closeMin = safeDiv(rows.reduce((a,r)=>a+num(r.closeMin),0), n);
@@ -266,12 +266,12 @@
 
   // Score individual (0..100)
   function computeVendorScore(v, t){
-    const conv01 = (v.close1st === "SÃ­") ? 1 : 0;
+    const conv01 = (v.close1st === "Sí") ? 1 : 0;
     const conf01 = clamp(num(v.confidence) / 5, 0, 1);
 
     const upsell01 = upsellTo01(v.upsell);
     const cross01  = triTo01(v.cross);
-    const follow01 = (v.follow === "SÃ­") ? 1 : 0;
+    const follow01 = (v.follow === "Sí") ? 1 : 0;
 
     const followTimesNorm = t.avgFU > 0 ? clamp(num(v.followTimesN) / t.avgFU, 0, 1.2) : 0;
     const followTimes01 = clamp(followTimesNorm / 1.2, 0, 1);
@@ -305,7 +305,7 @@
 
     els.chipTeam.textContent = `EQUIPO ${k.n} ${k.n === 1 ? "vendedor" : "vendedores"}`;
     const cards = [
-      { label:"ConversiÃ³n 1er contacto", value:pct(k.conv), target:`Meta: ${state.targets.conv}%`, chip: statusChip(k.conv, state.targets.conv) },
+      { label:"Conversión 1er contacto", value:pct(k.conv), target:`Meta: ${state.targets.conv}%`, chip: statusChip(k.conv, state.targets.conv) },
       { label:"Confianza Promedio", value:round2(k.conf), target:`Meta: ${state.targets.conf}`, chip: statusChip(k.conf, state.targets.conf) },
       { label:"Upsell (P8)", value:pct(k.upsell), target:`Meta: ${state.targets.upsell}%`, chip: statusChip(k.upsell, state.targets.upsell) },
       { label:"Cross-selling (P9)", value:pct(k.cross), target:`Meta: ${state.targets.cross}%`, chip: statusChip(k.cross, state.targets.cross) },
@@ -313,7 +313,7 @@
       { label:"Prom. # Seguimientos", value:round2(k.avgFU), target:`Meta: ${state.targets.avgFU}`, chip: statusChip(k.avgFU, state.targets.avgFU) },
       { label:"Pitch estructurado (P12)", value:pct(k.pitch), target:`Meta: ${state.targets.pitch}%`, chip: statusChip(k.pitch, state.targets.pitch) },
       { label:"Experiencia Promedio (meses)", value:round2(k.exp), target:`Meta: ${state.targets.exp}`, chip: statusChip(k.exp, state.targets.exp) },
-      { label:"Tiempo cierre prom. (min)", value:round2(k.closeMin), target:`Meta: â‰¤ ${state.targets.closeMin}`, chip: statusChip(k.closeMin, state.targets.closeMin, "lower-better") },
+      { label:"Tiempo cierre prom. (min)", value:round2(k.closeMin), target:`Meta: ≤ ${state.targets.closeMin}`, chip: statusChip(k.closeMin, state.targets.closeMin, "lower-better") },
     ];
 
     els.kpiCards.innerHTML = cards.map(c => `
@@ -354,7 +354,7 @@
   function renderBeforeAfter(k){
     const b = loadBaseline();
     const rows = [
-      { name:"ConversiÃ³n 1er contacto", base:b?.conv, curr:k.conv, fmt:v=>pct(v) },
+      { name:"Conversión 1er contacto", base:b?.conv, curr:k.conv, fmt:v=>pct(v) },
       { name:"Confianza", base:b?.conf, curr:k.conf, fmt:v=>round2(v) },
       { name:"Upsell (P8)", base:b?.upsell, curr:k.upsell, fmt:v=>pct(v) },
       { name:"Cross-selling (P9)", base:b?.cross, curr:k.cross, fmt:v=>pct(v) },
@@ -377,11 +377,11 @@
 
       const deltaStr = hasBase
         ? (Math.abs(adjDelta) < 0.0001 ? "0" : (adjDelta > 0 ? `+${round2(adjDelta)}` : `${round2(adjDelta)}`))
-        : "â€”";
+        : "—";
 
       const pctStr = hasBase
         ? (Math.abs(pctCh) < 0.0001 ? "0%" : (pctCh > 0 ? `+${Math.round(pctCh)}%` : `${Math.round(pctCh)}%`))
-        : "â€”";
+        : "—";
 
       const cls =
         !hasBase ? "" :
@@ -391,10 +391,10 @@
       return `
         <tr>
           <td><strong>${r.name}</strong></td>
-          <td class="muted">${hasBase ? r.fmt(r.base) : "â€”"}</td>
+          <td class="muted">${hasBase ? r.fmt(r.base) : "—"}</td>
           <td>${r.fmt(r.curr)}</td>
           <td>${deltaStr}</td>
-          <td>${hasBase ? `<span class="badge ${cls}">${pctStr}</span>` : "â€”"}</td>
+          <td>${hasBase ? `<span class="badge ${cls}">${pctStr}</span>` : "—"}</td>
         </tr>
       `;
     }).join("");
@@ -403,7 +403,7 @@
   function renderVendorCards(){
     const vendors = activeTeam();
     if(!vendors.length){
-      els.vendorContainer.innerHTML = `<div class="alert" style="grid-column:1/-1">Guarda una respuesta para ver el anÃ¡lisis individual.</div>`;
+      els.vendorContainer.innerHTML = `<div class="alert" style="grid-column:1/-1">Guarda una respuesta para ver el análisis individual.</div>`;
       return;
     }
 
@@ -411,10 +411,10 @@
     const computed = vendors.map(v => {
       const s = computeVendorScore(v, t);
 
-      const b1 = (v.close1st === "SÃ­") ? ["âœ“ Cierra 1er contacto","success"] : ["âœ— No cierra 1er contacto","danger"];
-      const b2 = (num(v.confidence) >= t.conf) ? ["âœ“ Confianza","success"] : ["âš  Confianza","warning"];
-      const b3 = (v.follow === "SÃ­") ? ["âœ“ Seguimiento","success"] : ["âœ— Seguimiento","danger"];
-      const b4 = (v.pitch === "SÃ­" || v.pitch === "MÃ¡s o menos") ? ["âœ“ Speech","success"] : ["âœ— Speech","danger"];
+      const b1 = (v.close1st === "Sí") ? ["✓ Cierra 1er contacto","success"] : ["✗ No cierra 1er contacto","danger"];
+      const b2 = (num(v.confidence) >= t.conf) ? ["✓ Confianza","success"] : ["⚠ Confianza","warning"];
+      const b3 = (v.follow === "Sí") ? ["✓ Seguimiento","success"] : ["✗ Seguimiento","danger"];
+      const b4 = (v.pitch === "Sí" || v.pitch === "Más o menos") ? ["✓ Speech","success"] : ["✗ Speech","danger"];
 
       return { v, s, badges:[b1,b2,b3,b4] };
     }).sort((a,b) => b.s.score - a.s.score);
@@ -429,7 +429,7 @@
           <div class="vendor-header">
             <div class="vendor-title">
               <h3>${escapeHtml(v.name)}</h3>
-              <span class="role">${escapeHtml(v.mainChannel)} â€¢ Ranking #${idx+1}</span>
+              <span class="role">${escapeHtml(v.mainChannel)} • Ranking #${idx+1}</span>
             </div>
             <span class="vendor-chip">#${v.id}</span>
           </div>
@@ -565,7 +565,7 @@
 
     const required = [mainChannel, expLabel, closeTime, close1st, upsell, cross, follow, followTimesLabel, pitch, conf];
     if(required.some(x => !x)){
-      alert("Completa todas las preguntas requeridas (2â€“13).");
+      alert("Completa todas las preguntas requeridas (2–13).");
       return;
     }
 
@@ -626,7 +626,7 @@
           <td><input type="text" value="${escapeHtml(v.closeTime)}" data-k="closeTime" data-i="${idx}"></td>
           <td>
             <select data-k="close1st" data-i="${idx}">
-              <option value="SÃ­" ${v.close1st==="SÃ­"?"selected":""}>SÃ­</option>
+              <option value="Sí" ${v.close1st==="Sí"?"selected":""}>Sí</option>
               <option value="No" ${v.close1st==="No"?"selected":""}>No</option>
             </select>
           </td>
@@ -639,14 +639,14 @@
           </td>
           <td>
             <select data-k="cross" data-i="${idx}">
-              <option value="SÃ­" ${v.cross==="SÃ­"?"selected":""}>SÃ­</option>
+              <option value="Sí" ${v.cross==="Sí"?"selected":""}>Sí</option>
               <option value="A veces" ${v.cross==="A veces"?"selected":""}>A veces</option>
               <option value="No" ${v.cross==="No"?"selected":""}>No</option>
             </select>
           </td>
           <td>
             <select data-k="follow" data-i="${idx}">
-              <option value="SÃ­" ${v.follow==="SÃ­"?"selected":""}>SÃ­</option>
+              <option value="Sí" ${v.follow==="Sí"?"selected":""}>Sí</option>
               <option value="No" ${v.follow==="No"?"selected":""}>No</option>
             </select>
           </td>
@@ -655,13 +655,13 @@
               <option value="No hago seguimiento" ${v.followTimesLabel==="No hago seguimiento"?"selected":""}>No hago seguimiento</option>
               <option value="1 vez" ${v.followTimesLabel==="1 vez"?"selected":""}>1 vez</option>
               <option value="2 a 3 veces" ${v.followTimesLabel==="2 a 3 veces"?"selected":""}>2 a 3 veces</option>
-              <option value="MÃ¡s de 3 veces" ${v.followTimesLabel==="MÃ¡s de 3 veces"?"selected":""}>MÃ¡s de 3 veces</option>
+              <option value="Más de 3 veces" ${v.followTimesLabel==="Más de 3 veces"?"selected":""}>Más de 3 veces</option>
             </select>
           </td>
           <td>
             <select data-k="pitch" data-i="${idx}">
-              <option value="SÃ­" ${v.pitch==="SÃ­"?"selected":""}>SÃ­</option>
-              <option value="MÃ¡s o menos" ${v.pitch==="MÃ¡s o menos"?"selected":""}>MÃ¡s o menos</option>
+              <option value="Sí" ${v.pitch==="Sí"?"selected":""}>Sí</option>
+              <option value="Más o menos" ${v.pitch==="Más o menos"?"selected":""}>Más o menos</option>
               <option value="No" ${v.pitch==="No"?"selected":""}>No</option>
             </select>
           </td>
@@ -756,7 +756,7 @@
   }
 
   function resetAll(){
-    if(!confirm("Esto borrarÃ¡ datos, metas y baseline. Â¿Continuar?")) return;
+    if(!confirm("Esto borrará datos, metas y baseline. ¿Continuar?")) return;
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(BASELINE_KEY);
     state = { targets: getTargetsFromUI(), team: [] };
@@ -767,7 +767,7 @@
 
   function exportCSV(){
     const headers = [
-      "ID","Nombre","Rol","Ãrea/Canal","Canal principal","Experiencia","Meses experiencia",
+      "ID","Nombre","Rol","Área/Canal","Canal principal","Experiencia","Meses experiencia",
       "Tiempo cierre","Min cierre","Cierra 1er contacto","Upsell","Cross-selling",
       "Seguimiento","# Seguimientos","Speech","Confianza (1-5)","Score"
     ];
@@ -905,3 +905,7 @@
     const base = loadBaseline();
     if(base?.savedAt) els.lastSaved.textContent = `Baseline: ${base.savedAt}`;
   })();
+
+
+
+
