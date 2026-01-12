@@ -70,6 +70,10 @@
               </select>
             </div>
           </div>
+          <div class="filter-actions">
+            <button class="btn ghost" id="btnExportComparePdf" type="button">Exportar PDF</button>
+            <button class="btn ghost" id="btnExportCompareXls" type="button">Exportar XLS</button>
+          </div>
           <div class="compare-cards" id="compareCards"></div>
 
           <div class="panel-spacer"></div>
@@ -84,6 +88,10 @@
               <select id="sbCompareB"></select>
             </div>
           </div>
+          <div class="filter-actions">
+            <button class="btn ghost" id="btnExportCompareSbPdf" type="button">Exportar PDF</button>
+            <button class="btn ghost" id="btnExportCompareSbXls" type="button">Exportar XLS</button>
+          </div>
           <div class="compare-cards" id="compareSupabaseCards"></div>
         </div>
       </section>
@@ -91,6 +99,9 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.31/dist/jspdf.plugin.autotable.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="js/auth-config.js" defer></script>
   <script src="js/auth-guard.js" defer></script>
   <script src="js/logout.js" defer></script>

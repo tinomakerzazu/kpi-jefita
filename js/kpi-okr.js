@@ -100,6 +100,8 @@ const els = {
   sbName: document.getElementById("sbName"),
   btnLoadSupabase: document.getElementById("btnLoadSupabase"),
   sbStatus: document.getElementById("sbStatus"),
+  btnExportKpiPdf: document.getElementById("btnExportKpiPdf"),
+  btnExportKpiXls: document.getElementById("btnExportKpiXls"),
   btnLoadCsv: document.getElementById("btnLoadCsv"),
   btnRefreshCsv: document.getElementById("btnRefreshCsv"),
   csvStatus: document.getElementById("csvStatus"),
@@ -112,6 +114,10 @@ const els = {
   sbCompareA: document.getElementById("sbCompareA"),
   sbCompareB: document.getElementById("sbCompareB"),
   compareSupabaseCards: document.getElementById("compareSupabaseCards"),
+  btnExportComparePdf: document.getElementById("btnExportComparePdf"),
+  btnExportCompareXls: document.getElementById("btnExportCompareXls"),
+  btnExportCompareSbPdf: document.getElementById("btnExportCompareSbPdf"),
+  btnExportCompareSbXls: document.getElementById("btnExportCompareSbXls"),
   scoreboard: document.getElementById("scoreboard"),
   changesBoard: document.getElementById("changesBoard"),
   charts: document.getElementById("charts"),
@@ -125,6 +131,7 @@ let csvHeaders = [];
 let headerKeys = {};
 const okrBest = {};
 let supabaseRows = [];
+let logoDataUrl = null;
 
 function getSupabaseClient() {
   if (!window.supabase || !window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) return null;
@@ -450,6 +457,119 @@ function mapSupabaseRow(row) {
     [LABELS.q14]: row.dificultad || "",
     [LABELS.q15]: row.mejora || ""
   };
+}
+
+async function getLogoDataUrl() {
+  if (logoDataUrl) return logoDataUrl;
+  try {
+    const res = await fetch("Jefita icono.jpeg");
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    const reader = new FileReader();
+    const dataUrl = await new Promise((resolve) => {
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+    logoDataUrl = dataUrl;
+    return dataUrl;
+  } catch (err) {
+    return null;
+  }
+}
+
+function collectKpiExportRows(row) {
+  return FORM_ORDER.map((entry) => {
+    if (entry.type === "text") {
+      const field = fieldByKey(entry.key);
+      return [cleanDisplay(field.label), cleanDisplay(getRowValue(row, entry.key, field.label))];
+    }
+    const question = questionByKey(entry.key);
+    return [cleanDisplay(question.label), cleanDisplay(getRowValue(row, entry.key, question.label))];
+  });
+}
+
+async function exportKpiPdf() {
+  if (!window.jspdf || !window.jspdf.jsPDF || !window.jspdf.jsPDF.API || !window.jspdf.jsPDF.API.autoTable) return;
+  const source = lastRow || getFormRow("kpi-");
+  const rows = collectKpiExportRows(source);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const logo = await getLogoDataUrl();
+  if (logo) doc.addImage(logo, "JPEG", 40, 30, 36, 36);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.text("Reporte KPI - La Jefita", 90, 55);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(new Date().toLocaleString("es-PE"), 90, 72);
+  doc.autoTable({
+    startY: 90,
+    head: [["Campo", "Respuesta"]],
+    body: rows,
+    styles: { font: "helvetica", fontSize: 9 },
+    headStyles: { fillColor: [242, 68, 85] }
+  });
+  doc.save("kpi-reporte.pdf");
+}
+
+function exportKpiXls() {
+  if (!window.XLSX) return;
+  const source = lastRow || getFormRow("kpi-");
+  const rows = collectKpiExportRows(source);
+  const sheetData = [
+    ["Reporte KPI - La Jefita"],
+    ["Generado", new Date().toLocaleString("es-PE")],
+    [],
+    ["Campo", "Respuesta"],
+    ...rows
+  ];
+  const ws = window.XLSX.utils.aoa_to_sheet(sheetData);
+  const wb = window.XLSX.utils.book_new();
+  window.XLSX.utils.book_append_sheet(wb, ws, "KPI");
+  window.XLSX.writeFile(wb, "kpi-reporte.xlsx");
+}
+
+function collectCompareRows(label, row) {
+  const base = collectKpiExportRows(row);
+  return [[label, ""], ...base, ["", ""]];
+}
+
+async function exportComparePdf(getRows, filename) {
+  if (!window.jspdf || !window.jspdf.jsPDF || !window.jspdf.jsPDF.API || !window.jspdf.jsPDF.API.autoTable) return;
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const logo = await getLogoDataUrl();
+  if (logo) doc.addImage(logo, "JPEG", 40, 30, 36, 36);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.text("Comparativo KPI - La Jefita", 90, 55);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(new Date().toLocaleString("es-PE"), 90, 72);
+  doc.autoTable({
+    startY: 90,
+    head: [["Campo", "Respuesta"]],
+    body: getRows(),
+    styles: { font: "helvetica", fontSize: 9 },
+    headStyles: { fillColor: [242, 68, 85] }
+  });
+  doc.save(filename);
+}
+
+function exportCompareXls(getRows, filename) {
+  if (!window.XLSX) return;
+  const rows = getRows();
+  const sheetData = [
+    ["Comparativo KPI - La Jefita"],
+    ["Generado", new Date().toLocaleString("es-PE")],
+    [],
+    ["Campo", "Respuesta"],
+    ...rows
+  ];
+  const ws = window.XLSX.utils.aoa_to_sheet(sheetData);
+  const wb = window.XLSX.utils.book_new();
+  window.XLSX.utils.book_append_sheet(wb, ws, "Comparativo");
+  window.XLSX.writeFile(wb, filename);
 }
 
 function formatSupabaseLabel(row) {
@@ -1089,7 +1209,53 @@ if (els.sbCompareA) els.sbCompareA.addEventListener("change", renderCompareSupab
 if (els.sbCompareB) els.sbCompareB.addEventListener("change", renderCompareSupabase);
 if (els.compareA) els.compareA.addEventListener("change", renderCompare);
 if (els.compareB) els.compareB.addEventListener("change", renderCompare);
-  if (els.comparePick) els.comparePick.addEventListener("change", renderCompare);
-  if (els.btnSaveSupabase) els.btnSaveSupabase.addEventListener("click", saveToSupabase);
-  if (els.sbCompareA || els.sbCompareB) renderCompareSupabase();
+if (els.comparePick) els.comparePick.addEventListener("change", renderCompare);
+if (els.btnSaveSupabase) els.btnSaveSupabase.addEventListener("click", saveToSupabase);
+if (els.sbCompareA || els.sbCompareB) renderCompareSupabase();
+if (els.btnExportKpiPdf) els.btnExportKpiPdf.addEventListener("click", exportKpiPdf);
+if (els.btnExportKpiXls) els.btnExportKpiXls.addEventListener("click", exportKpiXls);
+if (els.btnExportComparePdf) {
+  els.btnExportComparePdf.addEventListener("click", () => {
+    const rowA = getCompareRow(els.compareA?.value, els.comparePick?.value);
+    const rowB = getCompareRow(els.compareB?.value, els.comparePick?.value);
+    const rows = () => [
+      ...collectCompareRows("Vendedor A", rowA || {}),
+      ...collectCompareRows("Vendedor B", rowB || {})
+    ];
+    exportComparePdf(rows, "comparativo-kpi.csv.pdf");
+  });
+}
+if (els.btnExportCompareXls) {
+  els.btnExportCompareXls.addEventListener("click", () => {
+    const rowA = getCompareRow(els.compareA?.value, els.comparePick?.value);
+    const rowB = getCompareRow(els.compareB?.value, els.comparePick?.value);
+    const rows = () => [
+      ...collectCompareRows("Vendedor A", rowA || {}),
+      ...collectCompareRows("Vendedor B", rowB || {})
+    ];
+    exportCompareXls(rows, "comparativo-kpi.xlsx");
+  });
+}
+if (els.btnExportCompareSbPdf) {
+  els.btnExportCompareSbPdf.addEventListener("click", () => {
+    const rowA = supabaseRows.find((row) => row.id === els.sbCompareA?.value);
+    const rowB = supabaseRows.find((row) => row.id === els.sbCompareB?.value);
+    const rows = () => [
+      ...collectCompareRows("Registro A", mapSupabaseRow(rowA || {})),
+      ...collectCompareRows("Registro B", mapSupabaseRow(rowB || {}))
+    ];
+    exportComparePdf(rows, "comparativo-supabase.pdf");
+  });
+}
+if (els.btnExportCompareSbXls) {
+  els.btnExportCompareSbXls.addEventListener("click", () => {
+    const rowA = supabaseRows.find((row) => row.id === els.sbCompareA?.value);
+    const rowB = supabaseRows.find((row) => row.id === els.sbCompareB?.value);
+    const rows = () => [
+      ...collectCompareRows("Registro A", mapSupabaseRow(rowA || {})),
+      ...collectCompareRows("Registro B", mapSupabaseRow(rowB || {}))
+    ];
+    exportCompareXls(rows, "comparativo-supabase.xlsx");
+  });
+}
 
