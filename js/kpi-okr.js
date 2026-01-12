@@ -109,6 +109,9 @@ const els = {
   compareB: document.getElementById("compareB"),
   comparePick: document.getElementById("comparePick"),
   compareCards: document.getElementById("compareCards"),
+  sbCompareA: document.getElementById("sbCompareA"),
+  sbCompareB: document.getElementById("sbCompareB"),
+  compareSupabaseCards: document.getElementById("compareSupabaseCards"),
   scoreboard: document.getElementById("scoreboard"),
   changesBoard: document.getElementById("changesBoard"),
   charts: document.getElementById("charts"),
@@ -690,6 +693,29 @@ function buildSupabaseOptions() {
   refreshCustomSelect(els.sbName);
 }
 
+function buildSupabaseCompareOptions() {
+  if (!els.sbCompareA || !els.sbCompareB) return;
+  const base = supabaseRows
+    .map((row) => ({
+      id: row.id,
+      label: formatSupabaseLabel(row)
+    }))
+    .filter((row) => row.id);
+  const options = base.length
+    ? [{ id: "", label: "Selecciona...", disabled: true }].concat(base)
+    : [{ id: "", label: "Sin registros", disabled: true }];
+  const html = options
+    .map((item, idx) => {
+      const disabled = item.disabled || idx === 0;
+      return `<option value="${disabled ? "" : item.id}" ${disabled ? "disabled" : ""}>${cleanDisplay(item.label)}</option>`;
+    })
+    .join("");
+  els.sbCompareA.innerHTML = html;
+  els.sbCompareB.innerHTML = html;
+  refreshCustomSelect(els.sbCompareA);
+  refreshCustomSelect(els.sbCompareB);
+}
+
 function loadCsvSelection() {
   if (!els.csvName || !els.csvPick) return;
   const nameHeader = getNameHeader();
@@ -761,6 +787,45 @@ function renderCompare() {
   }
 
   els.compareCards.innerHTML = cards.length ? cards.join("") : "<div class=\"muted\">Selecciona dos vendedores.</div>";
+}
+
+function renderCompareSupabase() {
+  if (!els.compareSupabaseCards || !els.sbCompareA || !els.sbCompareB) return;
+  const rowA = supabaseRows.find((row) => row.id === els.sbCompareA.value);
+  const rowB = supabaseRows.find((row) => row.id === els.sbCompareB.value);
+  const cards = [];
+
+  if (rowA) {
+    const mapped = mapSupabaseRow(rowA);
+    const scoreA = computeScore(mapped);
+    cards.push(`
+      <div class="compare-card">
+        <h3>${cleanDisplay(formatSupabaseLabel(rowA))}</h3>
+        <div class="compare-meta">Score: ${scoreA.avg}%</div>
+        <ul class="kpi-list">
+          ${scoreA.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${s.score}%</strong></li>`).join("")}
+        </ul>
+      </div>
+    `);
+  }
+
+  if (rowB) {
+    const mapped = mapSupabaseRow(rowB);
+    const scoreB = computeScore(mapped);
+    cards.push(`
+      <div class="compare-card">
+        <h3>${cleanDisplay(formatSupabaseLabel(rowB))}</h3>
+        <div class="compare-meta">Score: ${scoreB.avg}%</div>
+        <ul class="kpi-list">
+          ${scoreB.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${s.score}%</strong></li>`).join("")}
+        </ul>
+      </div>
+    `);
+  }
+
+  els.compareSupabaseCards.innerHTML = cards.length
+    ? cards.join("")
+    : "<div class=\"muted\">Selecciona dos registros de Supabase.</div>";
 }
 
 function renderScoreboard() {
@@ -926,6 +991,7 @@ async function refreshSupabase() {
     }
     supabaseRows = data || [];
     buildSupabaseOptions();
+    buildSupabaseCompareOptions();
     if (els.sbStatus) els.sbStatus.textContent = `Supabase: ${supabaseRows.length} registros`;
   } catch (err) {
     if (els.sbStatus) els.sbStatus.textContent = "Supabase: error";
@@ -1019,8 +1085,11 @@ if (els.csvName) els.csvName.addEventListener("change", loadCsvSelection);
 if (els.csvPick) els.csvPick.addEventListener("change", loadCsvSelection);
 if (els.btnLoadSupabase) els.btnLoadSupabase.addEventListener("click", loadSupabaseSelection);
 if (els.sbName) els.sbName.addEventListener("change", loadSupabaseSelection);
+if (els.sbCompareA) els.sbCompareA.addEventListener("change", renderCompareSupabase);
+if (els.sbCompareB) els.sbCompareB.addEventListener("change", renderCompareSupabase);
 if (els.compareA) els.compareA.addEventListener("change", renderCompare);
 if (els.compareB) els.compareB.addEventListener("change", renderCompare);
-if (els.comparePick) els.comparePick.addEventListener("change", renderCompare);
-if (els.btnSaveSupabase) els.btnSaveSupabase.addEventListener("click", saveToSupabase);
+  if (els.comparePick) els.comparePick.addEventListener("change", renderCompare);
+  if (els.btnSaveSupabase) els.btnSaveSupabase.addEventListener("click", saveToSupabase);
+  if (els.sbCompareA || els.sbCompareB) renderCompareSupabase();
 
