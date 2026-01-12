@@ -1,7 +1,5 @@
 const CSV_URL = "https://docs.google.com/spreadsheets/d/10S0GBW_TqlmBi4ushSho3X9_H47YYgsptEUB101KrC8/gviz/tq?tqx=out:csv&gid=670243679";
 
-const SUPABASE_URL = "https://bcqmrshqfcjqoeeqmhby.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_I1NhHflv8MVPr7qYNQ6izQ_v-5b493n";
 const SUPABASE_TABLE = "kpi_respuestas";
 
 const LABELS = {
@@ -398,6 +396,22 @@ function mapSupabaseRow(row) {
   };
 }
 
+function formatSupabaseLabel(row) {
+  const name = row.nombre || "Sin nombre";
+  const created = row.created_at ? new Date(row.created_at) : null;
+  if (!created || Number.isNaN(created.getTime())) return name;
+  const date = created.toLocaleDateString("es-PE", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+  const time = created.toLocaleTimeString("es-PE", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+  return `${name} · ${date} ${time}`;
+}
+
 function orderedOptions(question) {
   const best = okrBest[question.key];
   if (!best) return question.options;
@@ -604,17 +618,19 @@ function buildNameOptions() {
 
 function buildSupabaseOptions() {
   if (!els.sbName) return;
-  const names = supabaseRows
-    .map((row) => row.nombre)
-    .filter(Boolean);
-  const base = names.sort((a, b) => cleanDisplay(a).localeCompare(cleanDisplay(b), "es"));
+  const base = supabaseRows
+    .map((row) => ({
+      id: row.id,
+      label: formatSupabaseLabel(row)
+    }))
+    .filter((row) => row.id);
   const options = base.length
-    ? ["Selecciona..."].concat(base)
-    : ["Sin registros"];
+    ? [{ id: "", label: "Selecciona...", disabled: true }].concat(base)
+    : [{ id: "", label: "Sin registros", disabled: true }];
   const html = options
-    .map((name, idx) => {
-      const disabled = base.length === 0 || idx === 0;
-      return `<option value="${disabled ? "" : name}" ${disabled ? "disabled" : ""}>${cleanDisplay(name)}</option>`;
+    .map((item, idx) => {
+      const disabled = item.disabled || idx === 0;
+      return `<option value="${disabled ? "" : item.id}" ${disabled ? "disabled" : ""}>${cleanDisplay(item.label)}</option>`;
     })
     .join("");
   els.sbName.innerHTML = html;
@@ -639,9 +655,9 @@ function loadCsvSelection() {
 
 function loadSupabaseSelection() {
   if (!els.sbName) return;
-  const name = els.sbName.value;
-  if (!name || name === "Selecciona...") return;
-  const match = supabaseRows.find((row) => normalize(row.nombre) === normalize(name));
+  const id = els.sbName.value;
+  if (!id) return;
+  const match = supabaseRows.find((row) => row.id === id);
   if (!match) return;
   const mapped = mapSupabaseRow(match);
   applyRowToForm(mapped);
@@ -888,8 +904,8 @@ function getSupabasePayload() {
 }
 
 async function saveToSupabase() {
-  if (!window.supabase) return;
-  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const client = getSupabaseClient();
+  if (!client) return;
   const payload = getSupabasePayload();
   if (els.supabaseStatus) els.supabaseStatus.textContent = "Guardando...";
   const { error } = await client.from(SUPABASE_TABLE).insert(payload);
