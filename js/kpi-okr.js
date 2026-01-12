@@ -45,6 +45,7 @@ const HEADER_CANDIDATES = {
 };
 
 const OPTION_QUESTIONS = [
+  { key: "role", label: LABELS.role, options: ["SUPERVISOR", "JEFE DE AREA", "VENDEDOR", "APRENDIZ"], includeScore: false, includeOkr: false },
   { key: "q4", label: LABELS.q4, options: ["WhatsApp", "Llamadas telef\u00f3nicas", "Ambos"] },
   { key: "q5", label: LABELS.q5, options: ["Entre 1-3 meses", "Entre 3-6 meses", "Entre 6-12 meses", "M\u00e1s de un a\u00f1o"] },
   { key: "q6", label: LABELS.q6, options: ["Generalmente no cierro en el primer contacto", "M\u00e1s de 20 minutos", "Entre 15 y 20 minutos", "Entre 10 y 15 minutos", "Menos de 10 minutos"] },
@@ -59,7 +60,6 @@ const OPTION_QUESTIONS = [
 
 const TEXT_FIELDS = [
   { key: "name", label: LABELS.name, type: "text" },
-  { key: "role", label: LABELS.role, type: "text" },
   { key: "area", label: LABELS.area, type: "text" },
   { key: "evalDate", label: LABELS.evalDate, type: "date" },
   { key: "q14", label: LABELS.q14, type: "text" },
@@ -68,7 +68,7 @@ const TEXT_FIELDS = [
 
 const FORM_ORDER = [
   { type: "text", key: "name" },
-  { type: "text", key: "role" },
+  { type: "option", key: "role" },
   { type: "text", key: "area" },
   { type: "text", key: "evalDate" },
   { type: "option", key: "q4" },
@@ -120,6 +120,14 @@ let csvRows = [];
 let csvHeaders = [];
 let headerKeys = {};
 const okrBest = {};
+
+function scoreQuestions() {
+  return OPTION_QUESTIONS.filter((q) => q.includeScore !== false);
+}
+
+function okrQuestions() {
+  return OPTION_QUESTIONS.filter((q) => q.includeOkr !== false);
+}
 let lastRow = null;
 
 function fixMojibake(text) {
@@ -376,7 +384,7 @@ function optionScore(question, value) {
 }
 
 function computeScore(row) {
-  const scores = OPTION_QUESTIONS.map((q) => {
+  const scores = scoreQuestions().map((q) => {
     const value = getRowValue(row, q.key, q.label);
     return {
       key: q.key,
@@ -435,7 +443,7 @@ function buildForms() {
 
 function buildOkrConfig() {
   if (!els.okrConfigBody) return;
-  els.okrConfigBody.innerHTML = OPTION_QUESTIONS.map((q) => {
+  els.okrConfigBody.innerHTML = okrQuestions().map((q) => {
     const options = q.options.map((opt) => {
       const selected = okrBest[q.key] === opt ? "selected" : "";
       return `<option value="${opt}" ${selected}>${cleanDisplay(opt)}</option>`;
