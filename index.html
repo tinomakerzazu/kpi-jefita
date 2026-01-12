@@ -1,421 +1,99 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>KPI Vendedores | Form + Dashboard</title>
-
+  <title>Panel de Control - La Jefita</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-
 <body>
-<header>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <img src="Jefita icono.jpeg" alt="La Jefita" />
-        <div class="title">
-          <h1>KPI Vendedores</h1>
-          <small>Calculadora KPI'S - Empresa "La Jefita"</small>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="primary" id="btnSaveForm">Guardar respuesta</button>
-        <button class="success" id="btnBaseline">Guardar baseline</button>
-        <button id="btnExport">Exportar CSV</button>
-        <button id="btnShare">Compartir enlace</button>
-        <button class="danger" id="btnClearLink">Quitar enlace</button>
-        <button class="danger" id="btnReset">Reset</button>
-      </div>
-    </div>
-  </div>
-</header>
-
-<main class="wrap">
-  <div class="grid">
-    <section class="panel">
-      <div class="head">
-        <h2>Dashboard en tiempo real</h2>
-        <span class="chip info" id="chipTeam">EQUIPO 0</span>
-      </div>
-
-      <div class="body">
-        <div class="kpis" id="kpiCards"></div>
-
-        <div class="divider"></div>
-
-        <div class="panel" style="background:transparent;border:none;box-shadow:none">
-          <div class="head" style="border:1px solid var(--border);border-radius:14px 14px 0 0">
-            <h2>Antes vs Después</h2>
-            <span class="muted mono" style="font-size:11px">Comparación con baseline</span>
-          </div>
-          <div class="body" style="border:1px solid var(--border);border-top:none;border-radius:0 0 14px 14px;padding:0">
-            <table>
-              <thead>
-                <tr>
-                  <th>Métrica</th>
-                  <th>Baseline</th>
-                  <th>Actual</th>
-                  <th>Cambio</th>
-                  <th>% cambio</th>
-                </tr>
-              </thead>
-              <tbody id="beforeAfterBody"></tbody>
-            </table>
+  <main class="wrap login-shell">
+    <section class="login-card executive-login">
+      <div class="exec-left">
+        <div class="exec-brand">
+          <img src="Jefita icono.jpeg" alt="La Jefita" />
+          <div>
+            <span>Panel ejecutivo</span>
+            <strong>La Jefita</strong>
           </div>
         </div>
-
-        <div class="hint">
-          “Ofrecer más de un producto” (P8) y “Cross-selling” (P9) se miden como tasas del equipo. La confianza (P13) usa escala 1–5.
+        <h2>Panel ejecutivo de KPI &amp; OKR</h2>
+        <p>Control integral con data en tiempo real, comparativos y mejora continua.</p>
+        <div class="exec-tags">
+          <span>Cumplimiento</span>
+          <span>Anal&iacute;tica</span>
+          <span>Flujo continuo</span>
+        </div>
+        <div class="exec-cards">
+          <div class="exec-card">
+            <small>Vendedores activos</small>
+            <strong>—</strong>
+            <span>Sin datos</span>
+          </div>
+          <div class="exec-card">
+            <small>Score KPI promedio</small>
+            <strong>—</strong>
+            <span>Sin datos</span>
+          </div>
+          <div class="exec-card">
+            <small>Mejor resultado</small>
+            <strong>—</strong>
+            <span>Sin datos</span>
+          </div>
+          <div class="exec-card">
+            <small>Mejor mejora</small>
+            <strong>—</strong>
+            <span>Sin datos</span>
+          </div>
+        </div>
+        <div class="exec-row">
+          <div>
+            <strong>Ultima auditor&iacute;a</strong>
+            <span>Hace 2 horas</span>
+          </div>
+          <span class="exec-pill">Operativo</span>
         </div>
       </div>
 
-      <div class="footer">
-       Disponible
+      <div class="exec-right">
+        <div class="exec-login-head">
+          <span>Acceso corporativo</span>
+          <h3>Bienvenido de vuelta</h3>
+          <p>Ingresa con tu cuenta autorizada para continuar.</p>
+        </div>
+        <form class="form-grid exec-form" id="loginForm" style="grid-template-columns:1fr;">
+          <div class="field">
+            <label>Correo corporativo</label>
+            <input type="email" id="loginEmail" placeholder="tu.correo@empresa.com" required />
+          </div>
+          <div class="field">
+            <label>Contrase&ntilde;a</label>
+            <input type="password" id="loginPassword" placeholder="**********" required />
+          </div>
+          <div class="exec-row-inline">
+            <label class="corp-check">
+              <input type="checkbox" />
+              <span>Mantener sesi&oacute;n</span>
+            </label>
+            <a class="corp-link" href="#">Recuperar acceso</a>
+          </div>
+          <button class="btn primary exec-submit" type="submit">Ingresar al panel</button>
+          <p class="login-error" id="loginError" aria-live="polite"></p>
+        </form>
+        <div class="corp-divider">
+          <span>Acceso alternativo</span>
+        </div>
+        <div class="exec-alt">
+          <button class="corp-btn" type="button">Acceder con Google</button>
+          <button class="corp-btn" type="button">Acceder con Microsoft</button>
+          <button class="corp-btn" type="button">Acceder con tel&eacute;fono</button>
+        </div>
+      </div>
     </section>
+  </main>
 
-    <aside class="panel">
-      <div class="head">
-        <h2>Metas (targets)</h2>
-        <span class="muted mono" id="lastSaved" style="font-size:11px">—</span>
-      </div>
-      <div class="body">
-        <div class="form-grid">
-          <div class="field">
-            <label>Meta conversión 1er contacto (%)</label>
-            <input id="tConv" type="number" min="0" max="100" step="1" value="100" />
-          </div>
-
-          <div class="field">
-            <label>Meta confianza (1-5)</label>
-            <select id="tConf">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5" selected>5</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Meta upsell (P8) (%)</label>
-            <input id="tUpsell" type="number" min="0" max="100" step="1" value="100" />
-          </div>
-
-          <div class="field">
-            <label>Meta cross-selling (P9) (%)</label>
-            <input id="tCross" type="number" min="0" max="100" step="1" value="100" />
-          </div>
-
-          <div class="field">
-            <label>Meta seguimiento (P10) (%)</label>
-            <input id="tFollow" type="number" min="0" max="100" step="1" value="100" />
-          </div>
-
-          <div class="field">
-            <label>Meta prom. seguimientos (P11)</label>
-            <select id="tAvgFU">
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2.5">2.5</option>
-              <option value="4" selected>4</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Meta pitch estructurado (P12) (%)</label>
-            <input id="tPitch" type="number" min="0" max="100" step="1" value="100" />
-          </div>
-
-          <div class="field">
-            <label>Meta experiencia (meses)</label>
-            <select id="tExp">
-              <option value="2">2</option>
-              <option value="4.5">4.5</option>
-              <option value="9">9</option>
-              <option value="14" selected>14</option>
-            </select>
-          </div>
-
-          <div class="field" style="grid-column:1/-1">
-            <label>Meta tiempo de cierre (min, menor es mejor)</label>
-            <select id="tCloseMin">
-              <option value="8" selected>8</option>
-              <option value="12.5">12.5</option>
-              <option value="17.5">17.5</option>
-              <option value="25">25</option>
-              <option value="40">40</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="hint">
-          Chips: OK (≥100%), MED (90–99%), HIGH (70–89%), CRIT (&lt;70%). En “tiempo de cierre”, OK significa menor o igual a la meta.
-        </div>
-      </div>
-    </aside>
-  </div>
-
-  <section class="panel">
-    <div class="head">
-      <h2>Formulario (2–13)</h2>
-      <span class="muted" style="font-size:12px">Llena y guarda una respuesta por vendedor</span>
-    </div>
-
-    <div class="body">
-      <div class="form-grid">
-        <div class="field" style="grid-column:1/-1">
-          <div class="qtitle">
-            <label>1. Nombre del vendedor</label>
-            <span class="req">Requerido</span>
-          </div>
-          <input id="fName" type="text" placeholder="Ej. Juan Pérez" />
-        </div>
-
-        <!-- 2 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>2. CARGO O ROL</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qRole">
-            <label class="opt"><input type="checkbox" value="Supervisor"> <span>SUPERVISOR</span></label>
-            <label class="opt"><input type="checkbox" value="Jefe de área"> <span>JEFE DE AREA</span></label>
-            <label class="opt"><input type="checkbox" value="Vendedor"> <span>VENDEDOR</span></label>
-            <label class="opt"><input type="checkbox" value="Aprendiz"> <span>APRENDIZ</span></label>
-          </div>
-        </div>
-
-        <!-- 3 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>3. ÁREA O CANAL</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qArea">
-            <label class="opt"><input type="checkbox" value="WhatsApp"> <span>WHATSAPP</span></label>
-            <label class="opt"><input type="checkbox" value="TikTok"> <span>TIKTOK</span></label>
-            <label class="opt"><input type="checkbox" value="Live"> <span>LIVE</span></label>
-            <label class="opt"><input type="checkbox" value="Ecommerce"> <span>ECOMMERCE</span></label>
-          </div>
-        </div>
-
-        <!-- 4 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>4. Canal principal de ventas</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qMainChannel">
-            <label class="opt"><input type="radio" name="mainChannel" value="WhatsApp"> <span>WhatsApp</span></label>
-            <label class="opt"><input type="radio" name="mainChannel" value="Llamadas telefónicas"> <span>Llamadas telefónicas</span></label>
-            <label class="opt"><input type="radio" name="mainChannel" value="Ambos"> <span>Ambos</span></label>
-          </div>
-        </div>
-
-        <!-- 5 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>5. Años o meses de experiencia en ventas</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qExp">
-            <label class="opt"><input type="radio" name="exp" value="Entre 1-3 meses"> <span>Entre 1-3 meses</span></label>
-            <label class="opt"><input type="radio" name="exp" value="Entre 3-6 meses"> <span>Entre 3-6 meses</span></label>
-            <label class="opt"><input type="radio" name="exp" value="Entre 6-12 meses"> <span>Entre 6-12 meses</span></label>
-            <label class="opt"><input type="radio" name="exp" value="Más de un año"> <span>Más de un año</span></label>
-          </div>
-        </div>
-
-        <!-- 6 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>6. ¿Cuánto tiempo tardas en promedio en cerrar una venta?</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qCloseTime">
-            <label class="opt"><input type="radio" name="closeTime" value="Menos de 10 minutos"> <span>Menos de 10 minutos</span></label>
-            <label class="opt"><input type="radio" name="closeTime" value="Entre 10 y 15 minutos"> <span>Entre 10 y 15 minutos</span></label>
-            <label class="opt"><input type="radio" name="closeTime" value="Entre 15 y 20 minutos"> <span>Entre 15 y 20 minutos</span></label>
-            <label class="opt"><input type="radio" name="closeTime" value="Más de 20 minutos"> <span>Más de 20 minutos</span></label>
-            <label class="opt"><input type="radio" name="closeTime" value="Generalmente no cierro en el primer contacto"> <span>Generalmente no cierro en el primer contacto</span></label>
-          </div>
-        </div>
-
-        <!-- 7 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>7. ¿Cierras la venta en el primer contacto con el cliente?</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qClose1st">
-            <label class="opt"><input type="radio" name="close1st" value="Sí"> <span>Sí</span></label>
-            <label class="opt"><input type="radio" name="close1st" value="No"> <span>No</span></label>
-          </div>
-        </div>
-
-        <!-- 8 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>8. ¿Sueles ofrecer más de un producto por venta?</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qUpsell">
-            <label class="opt"><input type="radio" name="upsell" value="Siempre"> <span>Siempre</span></label>
-            <label class="opt"><input type="radio" name="upsell" value="A veces"> <span>A veces</span></label>
-            <label class="opt"><input type="radio" name="upsell" value="Nunca"> <span>Nunca</span></label>
-          </div>
-        </div>
-
-        <!-- 9 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>9. Aplicas cross-selling (combos, productos complementarios)?</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qCross">
-            <label class="opt"><input type="radio" name="cross" value="Sí"> <span>Sí</span></label>
-            <label class="opt"><input type="radio" name="cross" value="A veces"> <span>A veces</span></label>
-            <label class="opt"><input type="radio" name="cross" value="No"> <span>No</span></label>
-          </div>
-        </div>
-
-        <!-- 10 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>10. Cuando un cliente no compra, ¿haces seguimiento posterior?</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qFollow">
-            <label class="opt"><input type="radio" name="follow" value="Sí"> <span>Sí</span></label>
-            <label class="opt"><input type="radio" name="follow" value="No"> <span>No</span></label>
-          </div>
-        </div>
-
-        <!-- 11 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>11. Cuantas veces haces seguimiento a un cliente indeciso?</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qFollowTimes">
-            <label class="opt"><input type="radio" name="followTimes" value="No hago seguimiento"> <span>No hago seguimiento</span></label>
-            <label class="opt"><input type="radio" name="followTimes" value="1 vez"> <span>1 vez</span></label>
-            <label class="opt"><input type="radio" name="followTimes" value="2 a 3 veces"> <span>2 a 3 veces</span></label>
-            <label class="opt"><input type="radio" name="followTimes" value="Más de 3 veces"> <span>Más de 3 veces</span></label>
-          </div>
-        </div>
-
-        <!-- 12 -->
-        <div class="field">
-          <div class="qtitle">
-            <label>12. ¿Tienes un speech de ventas estructurado?</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qPitch">
-            <label class="opt"><input type="radio" name="pitch" value="Sí"> <span>Sí</span></label>
-            <label class="opt"><input type="radio" name="pitch" value="Más o menos"> <span>Más o menos</span></label>
-            <label class="opt"><input type="radio" name="pitch" value="No"> <span>No</span></label>
-          </div>
-        </div>
-
-        <!-- 13 -->
-        <div class="field" style="grid-column:1/-1">
-          <div class="qtitle">
-            <label>13. ¿Que tan seguro(a) te sientes al vender? 1-5</label>
-            <span class="req">Requerido</span>
-          </div>
-          <div class="options" id="qConfidence">
-            <label class="opt"><input type="radio" name="conf" value="1"> <span>1 (Nada seguro)</span></label>
-            <label class="opt"><input type="radio" name="conf" value="2"> <span>2</span></label>
-            <label class="opt"><input type="radio" name="conf" value="3"> <span>3</span></label>
-            <label class="opt"><input type="radio" name="conf" value="4"> <span>4</span></label>
-            <label class="opt"><input type="radio" name="conf" value="5"> <span>5 (Muy seguro)</span></label>
-          </div>
-        </div>
-      </div>
-
-      <div class="hint">
-        Al presionar “Guardar respuesta” se crea/actualiza el vendedor en la tabla y se recalculan KPI automáticamente.
-      </div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="head">
-      <h2>Análisis individual</h2>
-      <span class="muted" style="font-size:12px">Score, cumplimiento y ranking</span>
-    </div>
-    <div class="body">
-      <div class="vendor-grid" id="vendorContainer"></div>
-    </div>
-    <div class="footer">
-      El Score (0–100) pondera conversión, confianza, upsell, cross-selling, seguimiento, # seguimientos, pitch y experiencia.
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="head">
-      <h2>Comparacion 1 vs 1</h2>
-      <span class="muted" style="font-size:12px">Selecciona dos vendedores</span>
-    </div>
-    <div class="body">
-      <div class="compare-grid">
-        <div class="field">
-          <label>Persona A</label>
-          <select id="compareA"></select>
-        </div>
-        <div class="field">
-          <label>Persona B</label>
-          <select id="compareB"></select>
-        </div>
-      </div>
-      <div class="compare-summary" id="compareSummary"></div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="head">
-      <h2>Base de respuestas</h2>
-      <span class="muted" style="font-size:12px">Editable • Recalcula al instante</span>
-    </div>
-    <div class="body">
-      <table>
-        <thead>
-          <tr>
-            <th style="min-width:60px">ID</th>
-            <th style="min-width:180px">Nombre</th>
-            <th style="min-width:140px">Rol</th>
-            <th style="min-width:140px">Área/Canal</th>
-            <th style="min-width:160px">Canal principal</th>
-            <th style="min-width:120px">Experiencia</th>
-            <th style="min-width:180px">Tiempo cierre</th>
-            <th style="min-width:120px">Cierra 1er</th>
-            <th style="min-width:120px">+1 prod</th>
-            <th style="min-width:120px">Cross</th>
-            <th style="min-width:120px">Seguimiento</th>
-            <th style="min-width:140px"># Seg.</th>
-            <th style="min-width:140px">Speech</th>
-            <th style="min-width:110px">Conf (1–5)</th>
-            <th style="min-width:90px">Score</th>
-            <th style="min-width:120px; text-align:right">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="teamBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <div class="alert">
-    QUEJAS - SOPORTE - MEJORAS : 977 446 511 / jamesrojasdiaz01@gmail.com 
-  </div>
-</main>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/app.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth-config.js" defer></script>
+  <script src="js/auth.js" defer></script>
 </body>
 </html>
-
-
-
-

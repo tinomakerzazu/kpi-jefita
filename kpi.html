@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KPI</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <div class="logo-dot" aria-hidden="true"></div>
+        <div>
+          <h1>KPI</h1>
+          <p>Panel empresarial para seguimiento</p>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn ghost" href="index.html">Salir</a>
+        <button class="btn ghost" id="btnResetAll" type="button">Limpiar</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-title">Secciones</div>
+      <details class="nav-section" open>
+        <summary>Indicadores</summary>
+        <a class="nav-link active" href="kpi.html">KPI</a>
+        <a class="nav-link" href="okr.html">OKR</a>
+      </details>
+      <details class="nav-section" open>
+        <summary>Datos</summary>
+        <a class="nav-link" href="datos.html">Datos CSV</a>
+        <a class="nav-link" href="comparar.html">Comparar</a>
+      </details>
+      <details class="nav-section" open>
+        <summary>Registros</summary>
+        <a class="nav-link" href="nuevo.html">Nuevo registro</a>
+      </details>
+    </aside>
+
+    <section class="content">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>KPI</h2>
+            <span class="muted">Usa datos del CSV o carga manualmente</span>
+          </div>
+          <div class="status" id="kpiStatus">Score: 0%</div>
+        </div>
+
+        <div class="panel-body">
+          <div class="filter-row">
+            <div class="field">
+              <label for="csvName">Vendedor (CSV)</label>
+              <select id="csvName"></select>
+            </div>
+            <div class="field">
+              <label for="csvPick">Respuesta</label>
+              <select id="csvPick">
+                <option value="oldest">M&#225;s antigua</option>
+                <option value="newest">M&#225;s nueva</option>
+              </select>
+            </div>
+            <div class="filter-actions">
+              <button class="btn" id="btnLoadCsv" type="button">Cargar CSV</button>
+              <button class="btn ghost" id="btnRefreshCsv" type="button">Actualizar CSV</button>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <form id="kpiForm" class="form-grid"></form>
+
+            <div class="kpi-summary">
+              <div class="kpi-card">
+                <h3>Score KPI</h3>
+                <div class="kpi-score" id="kpiScore">0%</div>
+                <div class="kpi-meter">
+                  <div id="kpiMeterFill"></div>
+                </div>
+                <p class="muted">Promedio ponderado de respuestas.</p>
+              </div>
+              <div class="kpi-card">
+                <h3>Detalle</h3>
+                <ul class="kpi-list" id="kpiBreakdown"></ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-spacer"></div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <h3>Scoreboard - Mejores vendedores</h3>
+              <ul class="score-list" id="scoreboard"></ul>
+            </div>
+            <div class="kpi-card">
+              <h3>Mejores cambios</h3>
+              <ul class="score-list" id="changesBoard"></ul>
+            </div>
+          </div>
+
+          <div class="panel-spacer"></div>
+
+          <div class="kpi-card">
+            <h3>Distribuci&oacute;n por pregunta</h3>
+            <div id="charts"></div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth-config.js" defer></script>
+  <script src="js/auth-guard.js" defer></script>
+  <script src="js/kpi-okr.js" defer></script>
+</body>
+</html>
