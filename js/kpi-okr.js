@@ -99,6 +99,9 @@ const els = {
   btnResetAll: document.getElementById("btnResetAll"),
   csvName: document.getElementById("csvName"),
   csvPick: document.getElementById("csvPick"),
+  sbName: document.getElementById("sbName"),
+  btnLoadSupabase: document.getElementById("btnLoadSupabase"),
+  sbStatus: document.getElementById("sbStatus"),
   btnLoadCsv: document.getElementById("btnLoadCsv"),
   btnRefreshCsv: document.getElementById("btnRefreshCsv"),
   csvStatus: document.getElementById("csvStatus"),
@@ -120,6 +123,12 @@ let csvRows = [];
 let csvHeaders = [];
 let headerKeys = {};
 const okrBest = {};
+let supabaseRows = [];
+
+function getSupabaseClient() {
+  if (!window.supabase || !window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) return null;
+  return window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+}
 
 function scoreQuestions() {
   return OPTION_QUESTIONS.filter((q) => q.includeScore !== false);
@@ -357,6 +366,7 @@ function getRowValue(row, key, label) {
   if (row[label] !== undefined) return row[label] || "";
   const header = headerKeys[key];
   if (header && row[header] !== undefined) return row[header] || "";
+  if (row[key] !== undefined) return row[key] || "";
   return "";
 }
 
@@ -365,6 +375,27 @@ function getNameHeader() {
   const candidate = csvHeaders.find((h) => normalize(h).includes("nombres"));
   if (candidate) return candidate;
   return csvHeaders[1] || csvHeaders[0] || "";
+}
+
+function mapSupabaseRow(row) {
+  return {
+    [LABELS.name]: row.nombre || "",
+    [LABELS.evalDate]: row.fecha_evaluacion || "",
+    [LABELS.role]: row.cargo || "",
+    [LABELS.area]: row.area_canal || "",
+    [LABELS.q4]: row.canal_principal || "",
+    [LABELS.q5]: row.experiencia || "",
+    [LABELS.q6]: row.tiempo_cierre || "",
+    [LABELS.q7]: row.cierra_primer_contacto || "",
+    [LABELS.q8]: row.upsell || "",
+    [LABELS.q9]: row.cross_selling || "",
+    [LABELS.q10]: row.seguimiento || "",
+    [LABELS.q11]: row.retargeting || "",
+    [LABELS.q12]: row.speech || "",
+    [LABELS.q13]: row.confianza || "",
+    [LABELS.q14]: row.dificultad || "",
+    [LABELS.q15]: row.mejora || ""
+  };
 }
 
 function orderedOptions(question) {
@@ -571,6 +602,25 @@ function buildNameOptions() {
   if (els.compareB) refreshCustomSelect(els.compareB);
 }
 
+function buildSupabaseOptions() {
+  if (!els.sbName) return;
+  const names = supabaseRows
+    .map((row) => row.nombre)
+    .filter(Boolean);
+  const base = names.sort((a, b) => cleanDisplay(a).localeCompare(cleanDisplay(b), "es"));
+  const options = base.length
+    ? ["Selecciona..."].concat(base)
+    : ["Sin registros"];
+  const html = options
+    .map((name, idx) => {
+      const disabled = base.length === 0 || idx === 0;
+      return `<option value="${disabled ? "" : name}" ${disabled ? "disabled" : ""}>${cleanDisplay(name)}</option>`;
+    })
+    .join("");
+  els.sbName.innerHTML = html;
+  refreshCustomSelect(els.sbName);
+}
+
 function loadCsvSelection() {
   if (!els.csvName || !els.csvPick) return;
   const nameHeader = getNameHeader();
@@ -585,6 +635,17 @@ function loadCsvSelection() {
   const pick = els.csvPick.value === "newest" ? sorted[sorted.length - 1] : sorted[0];
   applyRowToForm(pick.row);
   renderKPI(pick.row);
+}
+
+function loadSupabaseSelection() {
+  if (!els.sbName) return;
+  const name = els.sbName.value;
+  if (!name || name === "Selecciona...") return;
+  const match = supabaseRows.find((row) => normalize(row.nombre) === normalize(name));
+  if (!match) return;
+  const mapped = mapSupabaseRow(match);
+  applyRowToForm(mapped);
+  renderKPI(mapped);
 }
 
 function getCompareRow(name, pick) {
@@ -781,6 +842,27 @@ async function refreshCsv() {
   }
 }
 
+async function refreshSupabase() {
+  const client = getSupabaseClient();
+  if (!client) return;
+  try {
+    if (els.sbStatus) els.sbStatus.textContent = "Supabase: cargando...";
+    const { data, error } = await client
+      .from(SUPABASE_TABLE)
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      if (els.sbStatus) els.sbStatus.textContent = "Supabase: error";
+      return;
+    }
+    supabaseRows = data || [];
+    buildSupabaseOptions();
+    if (els.sbStatus) els.sbStatus.textContent = `Supabase: ${supabaseRows.length} registros`;
+  } catch (err) {
+    if (els.sbStatus) els.sbStatus.textContent = "Supabase: error";
+  }
+}
+
 function getSupabasePayload() {
   const row = getFormRow("sb-");
   const { avg } = computeScore(row);
@@ -816,6 +898,7 @@ async function saveToSupabase() {
     return;
   }
   if (els.supabaseStatus) els.supabaseStatus.textContent = "Guardado en Supabase";
+  refreshSupabase();
 }
 
 buildForms();
@@ -832,6 +915,7 @@ const needsCsv = [
   els.charts
 ].some(Boolean);
 if (needsCsv) refreshCsv();
+if (els.sbName) refreshSupabase();
 
 if (els.kpiForm) els.kpiForm.addEventListener("change", () => renderKPI());
 if (els.okrConfigBody) {
@@ -861,6 +945,8 @@ if (els.btnRefreshCsv) els.btnRefreshCsv.addEventListener("click", refreshCsv);
 if (els.btnLoadCsv) els.btnLoadCsv.addEventListener("click", loadCsvSelection);
 if (els.csvName) els.csvName.addEventListener("change", loadCsvSelection);
 if (els.csvPick) els.csvPick.addEventListener("change", loadCsvSelection);
+if (els.btnLoadSupabase) els.btnLoadSupabase.addEventListener("click", loadSupabaseSelection);
+if (els.sbName) els.sbName.addEventListener("change", loadSupabaseSelection);
 if (els.compareA) els.compareA.addEventListener("change", renderCompare);
 if (els.compareB) els.compareB.addEventListener("change", renderCompare);
 if (els.comparePick) els.comparePick.addEventListener("change", renderCompare);

@@ -60,6 +60,10 @@
               <select id="csvName"></select>
             </div>
             <div class="field">
+              <label for="sbName">Registro (Supabase)</label>
+              <select id="sbName"></select>
+            </div>
+            <div class="field">
               <label for="csvPick">Respuesta</label>
               <select id="csvPick">
                 <option value="oldest">M&#225;s antigua</option>
@@ -68,8 +72,10 @@
             </div>
             <div class="filter-actions">
               <button class="btn" id="btnLoadCsv" type="button">Cargar CSV</button>
+              <button class="btn ghost" id="btnLoadSupabase" type="button">Cargar Supabase</button>
               <button class="btn ghost" id="btnRefreshCsv" type="button">Actualizar CSV</button>
             </div>
+            <span class="status" id="sbStatus">Supabase: -</span>
           </div>
 
           <div class="kpi-grid">
