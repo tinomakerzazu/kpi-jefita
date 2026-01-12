@@ -210,6 +210,7 @@ function updateSelectToggle(select, toggle) {
   const label = selected ? selected.textContent : "Selecciona...";
   toggle.textContent = cleanDisplay(label);
   toggle.classList.toggle("is-placeholder", !select.value);
+  toggle.setAttribute("aria-expanded", "false");
 }
 
 function buildSelectMenu(select, menu) {
@@ -220,6 +221,8 @@ function buildSelectMenu(select, menu) {
     option.className = "select-option";
     option.textContent = cleanDisplay(opt.textContent);
     option.dataset.value = opt.value;
+    option.setAttribute("role", "option");
+    option.setAttribute("aria-selected", opt.selected ? "true" : "false");
     if (opt.disabled) option.disabled = true;
     if (opt.selected) option.classList.add("is-selected");
     menu.appendChild(option);
@@ -241,8 +244,11 @@ function createCustomSelect(select) {
   const toggle = document.createElement("button");
   toggle.type = "button";
   toggle.className = "select-toggle";
+  toggle.setAttribute("aria-haspopup", "listbox");
+  toggle.setAttribute("aria-expanded", "false");
   const menu = document.createElement("div");
   menu.className = "select-menu";
+  menu.setAttribute("role", "listbox");
 
   buildSelectMenu(select, menu);
   updateSelectToggle(select, toggle);
@@ -257,6 +263,12 @@ function createCustomSelect(select) {
   toggle.addEventListener("click", () => {
     closeAllCustomSelects(wrap);
     wrap.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", wrap.classList.contains("open") ? "true" : "false");
+    if (wrap.classList.contains("open")) {
+      const options = Array.from(menu.querySelectorAll(".select-option:not([disabled])"));
+      const selected = menu.querySelector(".select-option.is-selected") || options[0];
+      if (selected) selected.focus();
+    }
   });
 
   menu.addEventListener("click", (event) => {
@@ -267,6 +279,47 @@ function createCustomSelect(select) {
     buildSelectMenu(select, menu);
     updateSelectToggle(select, toggle);
     wrap.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  });
+
+  toggle.addEventListener("keydown", (event) => {
+    if (!["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    wrap.classList.add("open");
+    toggle.setAttribute("aria-expanded", "true");
+    const options = Array.from(menu.querySelectorAll(".select-option:not([disabled])"));
+    const selected = menu.querySelector(".select-option.is-selected") || options[0];
+    if (selected) selected.focus();
+  });
+
+  menu.addEventListener("keydown", (event) => {
+    const options = Array.from(menu.querySelectorAll(".select-option:not([disabled])"));
+    if (!options.length) return;
+    const current = document.activeElement.closest(".select-option");
+    let idx = options.indexOf(current);
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      idx = (idx + 1) % options.length;
+      options[idx].focus();
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      idx = (idx - 1 + options.length) % options.length;
+      options[idx].focus();
+      return;
+    }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      wrap.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.focus();
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (current) current.click();
+    }
   });
 
   select.addEventListener("change", () => {
@@ -905,7 +958,10 @@ function getSupabasePayload() {
 
 async function saveToSupabase() {
   const client = getSupabaseClient();
-  if (!client) return;
+  if (!client) {
+    if (els.supabaseStatus) els.supabaseStatus.textContent = "Supabase no configurado";
+    return;
+  }
   const payload = getSupabasePayload();
   if (els.supabaseStatus) els.supabaseStatus.textContent = "Guardando...";
   const { error } = await client.from(SUPABASE_TABLE).insert(payload);

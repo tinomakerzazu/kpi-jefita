@@ -331,11 +331,17 @@
       background:rgba(255,148,178,0.25);
       border-color:rgba(242,68,85,0.2);
     }
-    .select-option.is-selected{
-      background:rgba(255,148,178,0.45);
-      border-color:rgba(242,68,85,0.3);
-      font-weight:800;
-    }
+.select-option.is-selected{
+  background:rgba(255,148,178,0.45);
+  border-color:rgba(242,68,85,0.3);
+  font-weight:800;
+}
+.select-option:focus,
+.select-option.is-focused{
+  outline:none;
+  border-color:rgba(242,68,85,0.5);
+  background:rgba(255,148,178,0.3);
+}
 
     .field{
       background:rgba(255,255,255,0.92);
@@ -1325,6 +1331,10 @@
   font-weight:700;
   font-size:12px;
   cursor:pointer;
+}
+.corp-btn:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
 }
 .corp-btn:hover{
   border-color:rgba(242,68,85,0.45);
