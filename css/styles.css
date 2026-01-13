@@ -757,8 +757,37 @@
     .compare-grid{
       display:grid;
       grid-template-columns: repeat(3, minmax(200px, 1fr));
-      gap:12px;
-      margin-bottom:12px;
+      gap:16px;
+      margin-bottom:20px;
+      padding:20px 24px;
+      border-radius:18px;
+      background:#ffffff;
+      border:1.5px solid rgba(242,68,85,0.15);
+      box-shadow:
+        0 4px 16px rgba(102,15,36,0.08),
+        0 0 0 1px rgba(255,148,178,0.1);
+    }
+    .compare-grid .field{
+      background:#ffffff;
+      margin:0;
+    }
+    .compare-grid .field:hover,
+    .compare-grid .field:focus-within{
+      background:#ffffff;
+    }
+    .compare-grid .field select,
+    .compare-grid .field input{
+      background:#ffffff !important;
+      background-color:#ffffff !important;
+    }
+    .compare-grid .field select:focus,
+    .compare-grid .field input:focus,
+    .compare-grid .field select:hover,
+    .compare-grid .field input:hover,
+    .compare-grid .field select:active,
+    .compare-grid .field input:active{
+      background:#ffffff !important;
+      background-color:#ffffff !important;
     }
     @media (max-width: 900px){ .compare-grid{grid-template-columns:1fr} }
     .compare-cards{
@@ -1502,31 +1531,34 @@
 
 .filter-row{
   display:grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr)) auto;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
   gap:16px;
   align-items:end;
   margin-bottom:28px;
   padding:24px 28px;
   border-radius:20px;
-  background:linear-gradient(135deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96));
-  border:1.5px solid rgba(242,68,85,0.2);
-  box-shadow:
-    0 12px 32px rgba(102,15,36,0.1),
-    0 0 0 1px rgba(255,148,178,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.9);
-  backdrop-filter:blur(12px);
-  position:relative;
-  overflow:hidden;
-}
-.filter-row .field{
   background:#ffffff;
+  border:1.5px solid rgba(242,68,85,0.15);
+  box-shadow:
+    0 4px 16px rgba(102,15,36,0.08),
+    0 0 0 1px rgba(255,148,178,0.1);
+  position:relative;
+}
+.filter-row .field,
+.filter-row .field-enhanced{
+  background:#ffffff;
+  margin:0;
 }
 .filter-row .field:hover,
-.filter-row .field:focus-within{
+.filter-row .field:focus-within,
+.filter-row .field-enhanced:hover,
+.filter-row .field-enhanced:focus-within{
   background:#ffffff;
 }
 .filter-row .field select,
-.filter-row .field input{
+.filter-row .field input,
+.filter-row .field-enhanced select,
+.filter-row .field-enhanced input{
   background:#ffffff !important;
   background-color:#ffffff !important;
 }
@@ -1535,7 +1567,13 @@
 .filter-row .field select:hover,
 .filter-row .field input:hover,
 .filter-row .field select:active,
-.filter-row .field input:active{
+.filter-row .field input:active,
+.filter-row .field-enhanced select:focus,
+.filter-row .field-enhanced input:focus,
+.filter-row .field-enhanced select:hover,
+.filter-row .field-enhanced input:hover,
+.filter-row .field-enhanced select:active,
+.filter-row .field-enhanced input:active{
   background:#ffffff !important;
   background-color:#ffffff !important;
 }
@@ -1559,16 +1597,10 @@
   gap:10px;
   flex-wrap:wrap;
   align-items:center;
-}
-.filter-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
   grid-column:1 / -1;
-  margin-top:8px;
+  margin-top:12px;
   padding-top:16px;
-  border-top:1px solid rgba(242,68,85,0.1);
+  border-top:1px solid rgba(242,68,85,0.12);
 }
 .filter-actions .btn{
   display:inline-flex;
