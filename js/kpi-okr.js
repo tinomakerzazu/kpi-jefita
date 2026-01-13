@@ -44,6 +44,7 @@ const HEADER_CANDIDATES = {
 
 const OPTION_QUESTIONS = [
   { key: "role", label: LABELS.role, options: ["SUPERVISOR", "JEFE DE AREA", "VENDEDOR", "APRENDIZ"], includeScore: false, includeOkr: false },
+  { key: "area", label: LABELS.area, options: ["WHATSAPP", "TIKTOK", "LIVE", "MESSENGER"], includeScore: false, includeOkr: false },
   { key: "q4", label: LABELS.q4, options: ["WhatsApp", "Llamadas telef\u00f3nicas", "Ambos"] },
   { key: "q5", label: LABELS.q5, options: ["Entre 1-3 meses", "Entre 3-6 meses", "Entre 6-12 meses", "M\u00e1s de un a\u00f1o"] },
   { key: "q6", label: LABELS.q6, options: ["Generalmente no cierro en el primer contacto", "M\u00e1s de 20 minutos", "Entre 15 y 20 minutos", "Entre 10 y 15 minutos", "Menos de 10 minutos"] },
@@ -58,7 +59,6 @@ const OPTION_QUESTIONS = [
 
 const TEXT_FIELDS = [
   { key: "name", label: LABELS.name, type: "text" },
-  { key: "area", label: LABELS.area, type: "text" },
   { key: "evalDate", label: LABELS.evalDate, type: "date" },
   { key: "q14", label: LABELS.q14, type: "text" },
   { key: "q15", label: LABELS.q15, type: "text" }
@@ -67,7 +67,7 @@ const TEXT_FIELDS = [
 const FORM_ORDER = [
   { type: "text", key: "name" },
   { type: "option", key: "role" },
-  { type: "text", key: "area" },
+  { type: "option", key: "area" },
   { type: "text", key: "evalDate" },
   { type: "option", key: "q4" },
   { type: "option", key: "q5" },

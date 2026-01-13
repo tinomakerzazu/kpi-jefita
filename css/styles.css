@@ -25,7 +25,7 @@
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%; overflow-x:hidden;}
+    html,body{height:100%; overflow-x:hidden; overflow-y:auto;}
     body{
       margin:0;
       font-family:var(--sans);
@@ -37,6 +37,9 @@
         var(--bg);
       background-attachment:fixed;
       position:relative;
+      overflow-x:hidden;
+      overflow-y:auto;
+      min-height:100vh;
     }
     body::before{
       content:"";
@@ -207,7 +210,7 @@
       text-transform:uppercase;
       color:var(--text);
     }
-    .panel .body{padding:16px 18px; flex:1; overflow:auto}
+    .panel .body{padding:16px 18px; flex:1; overflow-y:auto;}
     .panel .footer{padding:12px 18px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); background:rgba(255,255,255,0.01); line-height:1.5}
 
     .chip{
@@ -651,7 +654,9 @@
     .tab-panel.active{display:block}
 
     .panel-body{
-      padding:16px 18px;
+      padding:20px 24px;
+      overflow-y:auto;
+      overflow-x:hidden;
     }
     .kpi-grid{
       display:grid;
