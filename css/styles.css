@@ -766,6 +766,8 @@
       border-radius:18px;
       background:#ffffff;
       border:1.5px solid rgba(242,68,85,0.15);
+      position:relative;
+      overflow:visible;
       box-shadow:
         0 4px 16px rgba(102,15,36,0.08),
         0 0 0 1px rgba(255,148,178,0.1);
@@ -791,6 +793,9 @@
     .compare-grid .field input:active{
       background:#ffffff !important;
       background-color:#ffffff !important;
+    }
+    .compare-grid .select-wrap.open{
+      z-index:60;
     }
     @media (max-width: 900px){ .compare-grid{grid-template-columns:1fr} }
     .compare-cards{
@@ -1201,6 +1206,34 @@
       background:rgba(255,219,232,0.6);
       font-weight:800;
       font-size:11px;
+    }
+    .okr-state{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:4px 10px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.2px;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+    .okr-state.low{
+      background:rgba(242,68,85,0.14);
+      border-color:rgba(242,68,85,0.3);
+      color:var(--primary-2);
+    }
+    .okr-state.med{
+      background:rgba(240,192,67,0.18);
+      border-color:rgba(240,192,67,0.35);
+      color:#8a5a00;
+    }
+    .okr-state.high{
+      background:rgba(66,201,139,0.18);
+      border-color:rgba(66,201,139,0.35);
+      color:#1f7a4f;
     }
 .panel-head{
   padding:24px 28px;

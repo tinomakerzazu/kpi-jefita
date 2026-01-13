@@ -435,7 +435,10 @@ function getRowValue(row, key, label) {
 
 function getNameHeader() {
   if (headerKeys.name) return headerKeys.name;
-  const candidate = csvHeaders.find((h) => normalize(h).includes("nombres"));
+  const candidate = csvHeaders.find((h) => {
+    const norm = normalize(h);
+    return norm.includes("nombres") || norm.includes("nombre") || norm.includes("vendedor");
+  });
   if (candidate) return candidate;
   return csvHeaders[1] || csvHeaders[0] || "";
 }
@@ -495,7 +498,8 @@ function collectOkrExportRows(row) {
   const { scores } = computeScore(source);
   return scores.map((score) => {
     const pct = Math.round((score.score / 100) * 100) || 0;
-    return [cleanDisplay(score.label), "100%", `${score.score}%`, `${pct}%`];
+    const state = getOkrState(score.score);
+    return [cleanDisplay(score.label), "100%", `${score.score}%`, `${pct}%`, state.label];
   });
 }
 
@@ -555,7 +559,7 @@ async function exportOkrPdf() {
   doc.text(new Date().toLocaleString("es-PE"), 90, 72);
   doc.autoTable({
     startY: 90,
-    head: [["Objetivo", "KR (Meta)", "Actual", "% Avance"]],
+    head: [["Objetivo", "KR (Meta)", "Actual", "% Avance", "Estado"]],
     body: rows,
     styles: { font: "helvetica", fontSize: 9 },
     headStyles: { fillColor: [242, 68, 85] }
@@ -570,7 +574,7 @@ function exportOkrXls() {
     ["Reporte OKR - La Jefita"],
     ["Generado", new Date().toLocaleString("es-PE")],
     [],
-    ["Objetivo", "KR (Meta)", "Actual", "% Avance"],
+    ["Objetivo", "KR (Meta)", "Actual", "% Avance", "Estado"],
     ...rows
   ];
   const ws = window.XLSX.utils.aoa_to_sheet(sheetData);
@@ -667,6 +671,12 @@ function computeScore(row) {
   const total = scores.reduce((sum, s) => sum + s.score, 0);
   const avg = scores.length ? Math.round(total / scores.length) : 0;
   return { avg, scores };
+}
+
+function getOkrState(score) {
+  if (score >= 80) return { label: "Alto", className: "high" };
+  if (score >= 50) return { label: "Medio", className: "med" };
+  return { label: "Bajo", className: "low" };
 }
 
 function fieldByKey(key) {
@@ -785,12 +795,14 @@ function renderOKR(scores) {
   if (!els.okrBody) return;
   els.okrBody.innerHTML = scores.map((s) => {
     const pct = Math.round((s.score / 100) * 100) || 0;
+    const state = getOkrState(s.score);
     return `
       <tr>
         <td>${cleanDisplay(s.label)}</td>
         <td><span class="okr-pill">100%</span></td>
         <td>${s.score}%</td>
         <td>${pct}%</td>
+        <td><span class="okr-state ${state.className}">${state.label}</span></td>
       </tr>
     `;
   }).join("");
@@ -829,7 +841,9 @@ function getRowTime(row, fallbackIdx) {
 
 function buildNameOptions() {
   const nameHeader = getNameHeader();
-  const names = Array.from(new Set(csvRows.map((row) => row[nameHeader]).filter(Boolean)));
+  const names = Array.from(
+    new Set(csvRows.map((row) => cleanCellValue(row[nameHeader])).filter(Boolean))
+  );
   const options = ["Selecciona..."]
     .concat(names.sort((a, b) => cleanDisplay(a).localeCompare(cleanDisplay(b), "es")))
     .map((name) => `<option value="${name}">${cleanDisplay(name)}</option>`)
@@ -893,7 +907,7 @@ function loadCsvSelection() {
   if (!name || name === "Selecciona...") return;
   const target = normalize(name);
   const matches = csvRows
-    .map((row, idx) => ({ row, idx, name: row[nameHeader] }))
+    .map((row, idx) => ({ row, idx, name: cleanCellValue(row[nameHeader]) }))
     .filter((item) => normalize(item.name) === target);
   if (!matches.length) return;
   const sorted = matches.slice().sort((a, b) => getRowTime(a.row, a.idx) - getRowTime(b.row, b.idx));
@@ -918,7 +932,7 @@ function getCompareRow(name, pick) {
   const nameHeader = getNameHeader();
   const target = normalize(name);
   const matches = csvRows
-    .map((row, idx) => ({ row, idx, name: row[nameHeader] }))
+    .map((row, idx) => ({ row, idx, name: cleanCellValue(row[nameHeader]) }))
     .filter((item) => normalize(item.name) === target);
   if (!matches.length) return null;
   const sorted = matches.slice().sort((a, b) => getRowTime(a.row, a.idx) - getRowTime(b.row, b.idx));
