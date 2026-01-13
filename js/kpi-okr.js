@@ -102,6 +102,8 @@ const els = {
   sbStatus: document.getElementById("sbStatus"),
   btnExportKpiPdf: document.getElementById("btnExportKpiPdf"),
   btnExportKpiXls: document.getElementById("btnExportKpiXls"),
+  btnExportOkrPdf: document.getElementById("btnExportOkrPdf"),
+  btnExportOkrXls: document.getElementById("btnExportOkrXls"),
   btnLoadCsv: document.getElementById("btnLoadCsv"),
   btnRefreshCsv: document.getElementById("btnRefreshCsv"),
   csvStatus: document.getElementById("csvStatus"),
@@ -488,6 +490,15 @@ function collectKpiExportRows(row) {
   });
 }
 
+function collectOkrExportRows(row) {
+  const source = row || lastRow || csvRows[0] || {};
+  const { scores } = computeScore(source);
+  return scores.map((score) => {
+    const pct = Math.round((score.score / 100) * 100) || 0;
+    return [cleanDisplay(score.label), "100%", `${score.score}%`, `${pct}%`];
+  });
+}
+
 async function exportKpiPdf() {
   if (!window.jspdf || !window.jspdf.jsPDF || !window.jspdf.jsPDF.API || !window.jspdf.jsPDF.API.autoTable) return;
   const source = lastRow || getFormRow("kpi-");
@@ -527,6 +538,45 @@ function exportKpiXls() {
   const wb = window.XLSX.utils.book_new();
   window.XLSX.utils.book_append_sheet(wb, ws, "KPI");
   window.XLSX.writeFile(wb, "kpi-reporte.xlsx");
+}
+
+async function exportOkrPdf() {
+  if (!window.jspdf || !window.jspdf.jsPDF || !window.jspdf.jsPDF.API || !window.jspdf.jsPDF.API.autoTable) return;
+  const rows = collectOkrExportRows();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const logo = await getLogoDataUrl();
+  if (logo) doc.addImage(logo, "JPEG", 40, 30, 36, 36);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.text("Reporte OKR - La Jefita", 90, 55);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(new Date().toLocaleString("es-PE"), 90, 72);
+  doc.autoTable({
+    startY: 90,
+    head: [["Objetivo", "KR (Meta)", "Actual", "% Avance"]],
+    body: rows,
+    styles: { font: "helvetica", fontSize: 9 },
+    headStyles: { fillColor: [242, 68, 85] }
+  });
+  doc.save("okr-reporte.pdf");
+}
+
+function exportOkrXls() {
+  if (!window.XLSX) return;
+  const rows = collectOkrExportRows();
+  const sheetData = [
+    ["Reporte OKR - La Jefita"],
+    ["Generado", new Date().toLocaleString("es-PE")],
+    [],
+    ["Objetivo", "KR (Meta)", "Actual", "% Avance"],
+    ...rows
+  ];
+  const ws = window.XLSX.utils.aoa_to_sheet(sheetData);
+  const wb = window.XLSX.utils.book_new();
+  window.XLSX.utils.book_append_sheet(wb, ws, "OKR");
+  window.XLSX.writeFile(wb, "okr-reporte.xlsx");
 }
 
 function collectCompareRows(label, row) {
@@ -1214,6 +1264,8 @@ if (els.btnSaveSupabase) els.btnSaveSupabase.addEventListener("click", saveToSup
 if (els.sbCompareA || els.sbCompareB) renderCompareSupabase();
 if (els.btnExportKpiPdf) els.btnExportKpiPdf.addEventListener("click", exportKpiPdf);
 if (els.btnExportKpiXls) els.btnExportKpiXls.addEventListener("click", exportKpiXls);
+if (els.btnExportOkrPdf) els.btnExportOkrPdf.addEventListener("click", exportOkrPdf);
+if (els.btnExportOkrXls) els.btnExportOkrXls.addEventListener("click", exportOkrXls);
 if (els.btnExportComparePdf) {
   els.btnExportComparePdf.addEventListener("click", () => {
     const rowA = getCompareRow(els.compareA?.value, els.comparePick?.value);

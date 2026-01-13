@@ -3192,3 +3192,26 @@
 .spotify-login .login-metric span{
   color:rgba(255,219,232,0.7);
 }
+
+/* Layout fixes for custom selects and tables */
+.panel-body{
+  overflow:visible;
+}
+.field{
+  overflow:visible;
+}
+.filter-row{
+  overflow:visible;
+}
+.select-wrap.open{
+  z-index:50;
+}
+.field-enhanced{
+  overflow:visible;
+}
+.table-wrap{
+  max-height:none;
+  min-height:0;
+  overflow-x:auto;
+  overflow-y:visible;
+}

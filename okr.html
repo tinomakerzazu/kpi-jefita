@@ -65,7 +65,11 @@
                 <option value="newest">M&#225;s nueva</option>
               </select>
             </div>
-            <button class="btn" id="btnLoadCsv" type="button">Cargar</button>
+            <div class="filter-actions">
+              <button class="btn primary" id="btnLoadCsv" type="button">Cargar</button>
+              <button class="btn ghost" id="btnExportOkrPdf" type="button">Exportar PDF</button>
+              <button class="btn ghost" id="btnExportOkrXls" type="button">Exportar XLS</button>
+            </div>
           </div>
           <table class="okr-table">
             <thead>
@@ -99,6 +103,9 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.31/dist/jspdf.plugin.autotable.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="js/auth-config.js" defer></script>
   <script src="js/auth-guard.js" defer></script>
   <script src="js/logout.js" defer></script>
