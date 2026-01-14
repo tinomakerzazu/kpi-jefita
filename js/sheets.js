@@ -5,19 +5,19 @@ const FALLBACK_HEADERS = [
   "1. NOMBRES COMPLETOS:",
   "2. CARGO O ROL",
   "3. AREA O CANAL",
-  "FECHA DE EVALUACIÓN",
+  "FECHA DE EVALUACIï¿½N",
   "4. Canal principal de ventas",
-  "5. Años o meses de experiencia en ventas",
-  "6. ¿Cuánto tiempo tardas en promedio en cerrar una venta?",
-  "7. ¿Cierras la venta en el primer contacto con el cliente?",
-  "8. ¿Sueles ofrecer más de un producto por venta?",
-  "9. ¿Aplicás cross-selling (combos, productos complementarios)?",
-  "10. Cuando un cliente no compra, ¿haces seguimiento posterior?",
-  "11. ¿Cuantas veces haces Retargeting?",
-  "12. ¿Tienes un speech de ventas estructurado?",
-  "13. ¿Qué tan seguro(a) te sientes al vender?",
-  "14. ¿Cuál consideras que es tu mayor dificultad al vender?",
-  "15. ¿Qué esperas mejorar en esta capacitación?"
+  "5. Aï¿½os o meses de experiencia en ventas",
+  "6. ï¿½Cuï¿½nto tiempo tardas en promedio en cerrar una venta?",
+  "7. ï¿½Cierras la venta en el primer contacto con el cliente?",
+  "8. ï¿½Sueles ofrecer mï¿½s de un producto por venta?",
+  "9. ï¿½Aplicï¿½s cross-selling (combos, productos complementarios)?",
+  "10. Cuando un cliente no compra, ï¿½haces seguimiento posterior?",
+  "11. ï¿½Cuantas veces haces Retargeting?",
+  "12. ï¿½Tienes un speech de ventas estructurado?",
+  "13. ï¿½Quï¿½ tan seguro(a) te sientes al vender?",
+  "14. ï¿½Cuï¿½l consideras que es tu mayor dificultad al vender?",
+  "15. ï¿½Quï¿½ esperas mejorar en esta capacitaciï¿½n?"
 ];
 
 const els = {
@@ -98,13 +98,13 @@ function renderTable() {
   els.tableBody.innerHTML = rows
     .map((row) => {
       const cells = headers
-        .map((h) => `<td>${row.data[h] !== undefined ? row.data[h] : ""}</td>`)
+        .map((h) => `<td data-label="${h}">${row.data[h] !== undefined ? row.data[h] : ""}</td>`)
         .join("");
       return `
         <tr>
-          <td>${row.rowNumber}</td>
+          <td data-label="Fila">${row.rowNumber}</td>
           ${cells}
-          <td>
+          <td data-label="Acciones">
             <div class="row-actions">
               <button class="btn-small" data-action="edit" data-row="${row.rowNumber}">Editar</button>
               <button class="btn-small danger" data-action="delete" data-row="${row.rowNumber}">Borrar</button>
@@ -185,7 +185,7 @@ async function updateRow() {
 }
 
 async function deleteRow(rowNumber) {
-  const ok = confirm(`¿Borrar la fila ${rowNumber}?`);
+  const ok = confirm(`ï¿½Borrar la fila ${rowNumber}?`);
   if (!ok) return;
   try {
     const res = await fetch(`${API_BASE}/api/rows/${rowNumber}`, { method: "DELETE" });

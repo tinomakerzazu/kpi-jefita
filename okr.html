@@ -3,14 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OKR</title>
+  <title>OKR - Panel de Control</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="animated-background">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+  </div>
   <header class="site-header">
     <div class="wrap header-inner">
       <div class="brand">
-        <div class="logo-dot" aria-hidden="true"></div>
+        <div class="logo-dot" aria-hidden="true">
+          <img src="Jefita icono.jpeg" alt="La Jefita" />
+        </div>
         <div>
           <h1>OKR</h1>
           <p>Objetivos y resultados clave</p>
@@ -18,57 +28,189 @@
         </div>
       </div>
       <div class="actions">
-        <a class="btn ghost" href="index.html">Salir</a>
-        <button class="btn ghost" id="logoutBtn" type="button">Cerrar sesi&oacute;n</button>
+        <a class="btn ghost" href="index.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Salir
+        </a>
+        <button class="btn ghost" id="logoutBtn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Cerrar sesi&oacute;n
+        </button>
       </div>
     </div>
   </header>
 
   <main class="wrap dashboard">
     <aside class="sidebar">
-      <div class="sidebar-title">Secciones</div>
+      <div class="sidebar-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        Secciones
+      </div>
       <details class="nav-section" open>
-        <summary>Indicadores</summary>
-        <a class="nav-link" href="kpi.html">KPI</a>
-        <a class="nav-link active" href="okr.html">OKR</a>
+        <summary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Indicadores
+        </summary>
+        <a class="nav-link" href="kpi.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          KPI
+        </a>
+        <a class="nav-link active" href="okr.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          OKR
+        </a>
       </details>
       <details class="nav-section" open>
-        <summary>Datos</summary>
-        <a class="nav-link" href="datos.html">Datos CSV</a>
-        <a class="nav-link" href="comparar.html">Comparar</a>
+        <summary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Datos
+        </summary>
+        <a class="nav-link" href="datos.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          Datos CSV
+        </a>
+        <a class="nav-link" href="comparar.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Comparar
+        </a>
       </details>
       <details class="nav-section" open>
-        <summary>Registros</summary>
-        <a class="nav-link" href="nuevo.html">Nuevo registro</a>
+        <summary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+          Registros
+        </summary>
+        <a class="nav-link" href="nuevo.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nuevo registro
+        </a>
+        <a class="nav-link" href="ventas-diarias.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Ventas Diarias
+        </a>
       </details>
     </aside>
 
     <section class="content">
       <section class="panel">
         <div class="panel-head">
-          <div>
-            <h2>OKR</h2>
-            <span class="muted">Objetivos basados en preguntas con opciones</span>
+          <div class="panel-head-content">
+            <div class="panel-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </div>
+            <div>
+              <h2>OKR</h2>
+              <span class="muted">Objetivos basados en preguntas con opciones</span>
+            </div>
           </div>
-          <div class="status" id="okrStatus">Avance: 0%</div>
+          <div class="status status-enhanced" id="okrStatus">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            Avance: 0%
+          </div>
         </div>
         <div class="panel-body">
           <div class="filter-row">
-            <div class="field">
-              <label for="csvName">Vendedor (CSV)</label>
+            <div class="field field-enhanced">
+              <label for="csvName">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Vendedor (CSV)
+              </label>
               <select id="csvName"></select>
             </div>
-            <div class="field">
-              <label for="csvPick">Respuesta</label>
+            <div class="field field-enhanced">
+              <label for="csvPick">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+                Respuesta
+              </label>
               <select id="csvPick">
                 <option value="oldest">M&#225;s antigua</option>
                 <option value="newest">M&#225;s nueva</option>
               </select>
             </div>
             <div class="filter-actions">
-              <button class="btn primary" id="btnLoadCsv" type="button">Cargar</button>
-              <button class="btn ghost" id="btnExportOkrPdf" type="button">Exportar PDF</button>
-              <button class="btn ghost" id="btnExportOkrXls" type="button">Exportar XLS</button>
+              <button class="btn primary" id="btnLoadCsv" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Cargar
+              </button>
+              <button class="btn ghost" id="btnExportOkrPdf" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Exportar PDF
+              </button>
+              <button class="btn ghost" id="btnExportOkrXls" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Exportar XLS
+              </button>
             </div>
           </div>
           <table class="okr-table">

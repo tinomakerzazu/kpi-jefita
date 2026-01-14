@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ventas Diarias - Panel de Control</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="animated-background">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+  </div>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <div class="logo-dot" aria-hidden="true">
+          <img src="Jefita icono.jpeg" alt="La Jefita" />
+        </div>
+        <div>
+          <h1>Ventas Diarias</h1>
+          <p>Registro de métricas diarias</p>
+          <small>Panel de Control - La Jefita</small>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn ghost" href="index.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Salir
+        </a>
+        <button class="btn ghost" id="logoutBtn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Cerrar sesi&oacute;n
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        Secciones
+      </div>
+      <details class="nav-section" open>
+        <summary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Indicadores
+        </summary>
+        <a class="nav-link" href="kpi.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          KPI
+        </a>
+        <a class="nav-link" href="okr.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          OKR
+        </a>
+      </details>
+      <details class="nav-section" open>
+        <summary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Datos
+        </summary>
+        <a class="nav-link" href="datos.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+          Datos CSV
+        </a>
+        <a class="nav-link" href="comparar.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Comparar
+        </a>
+      </details>
+      <details class="nav-section" open>
+        <summary>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+          Registros
+        </summary>
+        <a class="nav-link" href="nuevo.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nuevo registro
+        </a>
+        <a class="nav-link active" href="ventas-diarias.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Ventas Diarias
+        </a>
+      </details>
+    </aside>
+
+    <section class="content">
+      <section class="panel panel-enhanced">
+        <div class="panel-head">
+          <div class="panel-head-content">
+            <div class="panel-icon-wrapper">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="2" x2="12" y2="22"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <div>
+              <h2>Ventas Diarias</h2>
+              <span class="muted">Registro de métricas diarias: Cross-selling, Upselling y Retargeting</span>
+            </div>
+          </div>
+          <div class="status status-enhanced" id="ventasStatus">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            Listo
+          </div>
+        </div>
+        <div class="panel-body">
+          <form id="ventasDiariasForm" class="form-grid">
+            <div class="field field-enhanced">
+              <label for="ventasVendedor">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Vendedor
+              </label>
+              <input type="text" id="ventasVendedor" placeholder="Nombre del vendedor" required>
+            </div>
+            <div class="field field-enhanced">
+              <label for="ventasFecha">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Fecha
+              </label>
+              <input type="date" id="ventasFecha" required>
+            </div>
+            <div class="field field-enhanced">
+              <label for="ventasNormales">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="2" x2="12" y2="22"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                Ventas Normales (cantidad)
+              </label>
+              <input type="number" id="ventasNormales" min="0" step="1" placeholder="0" required>
+            </div>
+            <div class="field field-enhanced">
+              <label for="ventasPromocion">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Promoción
+              </label>
+              <select id="ventasPromocion" required>
+                <option value="">Selecciona una promoción...</option>
+                <option value="PROMOCION CLASICO">PROMOCION CLASICO</option>
+                <option value="PROMOCION PIQUE">PROMOCION PIQUE</option>
+                <option value="PROMOCION WAFLE">PROMOCION WAFLE</option>
+                <option value="PROMOCION M. LARGA WAFLE">PROMOCION M. LARGA WAFLE</option>
+                <option value="PROMOCION M. LARGA CLASICO">PROMOCION M. LARGA CLASICO</option>
+                <option value="PROMOCION FRENCH TERRY">PROMOCION FRENCH TERRY</option>
+                <option value="PROMOCION FRANELA">PROMOCION FRANELA</option>
+                <option value="PROMOCIÓN CAMISERO CLASICO">PROMOCIÓN CAMISERO CLASICO</option>
+                <option value="PROMOCION MEDIAS">PROMOCION MEDIAS</option>
+                <option value="PROMOCION CAMISERO WAFLE">PROMOCION CAMISERO WAFLE</option>
+                <option value="PROMOCION OVERSIZE">PROMOCION OVERSIZE</option>
+                <option value="PROMOCION BOXYFIT">PROMOCION BOXYFIT</option>
+                <option value="PROMOCION SHORT">PROMOCION SHORT</option>
+                <option value="PROMOCION MIXTURA">PROMOCION MIXTURA</option>
+                <option value="PROMOCIONES COMBINADAS">PROMOCIONES COMBINADAS</option>
+              </select>
+            </div>
+            <div class="field field-enhanced" id="promocionesCombinadasContainer" style="display: none; grid-column: 1 / -1;">
+              <label>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Promociones Combinadas (hasta 3)
+              </label>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                <select id="ventasPromocion1">
+                  <option value="">Selecciona promoción 1...</option>
+                  <option value="PROMOCION CLASICO">PROMOCION CLASICO</option>
+                  <option value="PROMOCION PIQUE">PROMOCION PIQUE</option>
+                  <option value="PROMOCION WAFLE">PROMOCION WAFLE</option>
+                  <option value="PROMOCION M. LARGA WAFLE">PROMOCION M. LARGA WAFLE</option>
+                  <option value="PROMOCION M. LARGA CLASICO">PROMOCION M. LARGA CLASICO</option>
+                  <option value="PROMOCION FRENCH TERRY">PROMOCION FRENCH TERRY</option>
+                  <option value="PROMOCION FRANELA">PROMOCION FRANELA</option>
+                  <option value="PROMOCIÓN CAMISERO CLASICO">PROMOCIÓN CAMISERO CLASICO</option>
+                  <option value="PROMOCION MEDIAS">PROMOCION MEDIAS</option>
+                  <option value="PROMOCION CAMISERO WAFLE">PROMOCION CAMISERO WAFLE</option>
+                  <option value="PROMOCION OVERSIZE">PROMOCION OVERSIZE</option>
+                  <option value="PROMOCION BOXYFIT">PROMOCION BOXYFIT</option>
+                  <option value="PROMOCION SHORT">PROMOCION SHORT</option>
+                  <option value="PROMOCION MIXTURA">PROMOCION MIXTURA</option>
+                </select>
+                <select id="ventasPromocion2">
+                  <option value="">Selecciona promoción 2...</option>
+                  <option value="PROMOCION CLASICO">PROMOCION CLASICO</option>
+                  <option value="PROMOCION PIQUE">PROMOCION PIQUE</option>
+                  <option value="PROMOCION WAFLE">PROMOCION WAFLE</option>
+                  <option value="PROMOCION M. LARGA WAFLE">PROMOCION M. LARGA WAFLE</option>
+                  <option value="PROMOCION M. LARGA CLASICO">PROMOCION M. LARGA CLASICO</option>
+                  <option value="PROMOCION FRENCH TERRY">PROMOCION FRENCH TERRY</option>
+                  <option value="PROMOCION FRANELA">PROMOCION FRANELA</option>
+                  <option value="PROMOCIÓN CAMISERO CLASICO">PROMOCIÓN CAMISERO CLASICO</option>
+                  <option value="PROMOCION MEDIAS">PROMOCION MEDIAS</option>
+                  <option value="PROMOCION CAMISERO WAFLE">PROMOCION CAMISERO WAFLE</option>
+                  <option value="PROMOCION OVERSIZE">PROMOCION OVERSIZE</option>
+                  <option value="PROMOCION BOXYFIT">PROMOCION BOXYFIT</option>
+                  <option value="PROMOCION SHORT">PROMOCION SHORT</option>
+                  <option value="PROMOCION MIXTURA">PROMOCION MIXTURA</option>
+                </select>
+                <select id="ventasPromocion3">
+                  <option value="">Selecciona promoción 3...</option>
+                  <option value="PROMOCION CLASICO">PROMOCION CLASICO</option>
+                  <option value="PROMOCION PIQUE">PROMOCION PIQUE</option>
+                  <option value="PROMOCION WAFLE">PROMOCION WAFLE</option>
+                  <option value="PROMOCION M. LARGA WAFLE">PROMOCION M. LARGA WAFLE</option>
+                  <option value="PROMOCION M. LARGA CLASICO">PROMOCION M. LARGA CLASICO</option>
+                  <option value="PROMOCION FRENCH TERRY">PROMOCION FRENCH TERRY</option>
+                  <option value="PROMOCION FRANELA">PROMOCION FRANELA</option>
+                  <option value="PROMOCIÓN CAMISERO CLASICO">PROMOCIÓN CAMISERO CLASICO</option>
+                  <option value="PROMOCION MEDIAS">PROMOCION MEDIAS</option>
+                  <option value="PROMOCION CAMISERO WAFLE">PROMOCION CAMISERO WAFLE</option>
+                  <option value="PROMOCION OVERSIZE">PROMOCION OVERSIZE</option>
+                  <option value="PROMOCION BOXYFIT">PROMOCION BOXYFIT</option>
+                  <option value="PROMOCION SHORT">PROMOCION SHORT</option>
+                  <option value="PROMOCION MIXTURA">PROMOCION MIXTURA</option>
+                </select>
+              </div>
+            </div>
+            <div class="field field-enhanced">
+              <label for="ventasCrossSelling">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                Cross-selling (cantidad)
+              </label>
+              <input type="number" id="ventasCrossSelling" min="0" step="1" placeholder="0" required>
+            </div>
+            <div class="field field-enhanced">
+              <label for="ventasUpselling">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+                Upselling (cantidad)
+              </label>
+              <input type="number" id="ventasUpselling" min="0" step="1" placeholder="0" required>
+            </div>
+            <div class="field field-enhanced">
+              <label for="ventasRetargeting">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Retargeting (cantidad)
+              </label>
+              <input type="number" id="ventasRetargeting" min="0" step="1" placeholder="0" required>
+            </div>
+            <div class="field field-enhanced field-textarea" style="grid-column: 1 / -1;">
+              <label for="ventasNotas">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Notas adicionales (opcional)
+                <span class="char-counter" id="ventasNotasCounter">0 / 500</span>
+              </label>
+              <div class="textarea-wrapper">
+                <textarea 
+                  id="ventasNotas" 
+                  rows="5" 
+                  maxlength="500"
+                  placeholder="Escribe aquí tus observaciones"
+                  autocomplete="off"
+                  spellcheck="true"></textarea>
+                <div class="textarea-resize-handle"></div>
+              </div>
+            </div>
+          </form>
+          <div class="form-actions">
+            <button class="btn primary" id="btnGuardarVentas" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              Guardar Registro
+            </button>
+            <button class="btn ghost" id="btnLimpiarVentas" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a11.5 11.5 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              Limpiar Formulario
+            </button>
+          </div>
+
+          <div class="panel-spacer"></div>
+
+          <div class="panel panel-enhanced" style="margin-top: 2rem;">
+            <div class="panel-head">
+              <div class="panel-head-content">
+                <div class="panel-icon-wrapper">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                  </svg>
+                </div>
+                <div>
+                  <h3>Historial de Ventas Diarias</h3>
+                  <span class="muted">Registros guardados</span>
+                </div>
+              </div>
+              <div class="status status-enhanced" id="historialStatus">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                Cargando...
+              </div>
+            </div>
+            <div class="filter-actions" style="padding: 1rem 1.5rem; border-top: 1px solid var(--border);">
+              <button class="btn ghost" id="btnExportVentasPdf" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Exportar PDF
+              </button>
+              <button class="btn ghost" id="btnExportVentasXls" type="button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Exportar XLS
+              </button>
+            </div>
+            <div class="panel-body">
+              <div id="historialVentas" class="table-wrap table-wrap-enhanced">
+                <table id="ventasTable">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Vendedor</th>
+                      <th>Ventas Normales</th>
+                      <th>Promoción</th>
+                      <th>Cross-selling</th>
+                      <th>Upselling</th>
+                      <th>Retargeting</th>
+                      <th>Total</th>
+                      <th>Notas</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ventasTableBody">
+                    <tr>
+                      <td colspan="10" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        Cargando registros...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.31/dist/jspdf.plugin.autotable.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+  <script src="js/auth-config.js" defer></script>
+  <script src="js/auth-guard.js" defer></script>
+  <script src="js/logout.js" defer></script>
+  <script src="js/kpi-okr.js" defer></script>
+  <script src="js/ventas-diarias.js" defer></script>
+</body>
+</html>

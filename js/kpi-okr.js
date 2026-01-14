@@ -1,4 +1,6 @@
-const CSV_URL = "https://docs.google.com/spreadsheets/d/10S0GBW_TqlmBi4ushSho3X9_H47YYgsptEUB101KrC8/gviz/tq?tqx=out:csv&gid=670243679";
+// URL para obtener TODAS las filas del Google Sheets
+// El formato gviz/tq?tqx=out:csv exporta todas las filas sin límites
+const CSV_URL = "https://docs.google.com/spreadsheets/d/1H2FfTK-aDkY6icnG4zwGYjjBDuQ5W_--Kk9RqIuszec/gviz/tq?tqx=out:csv&gid=1335971072";
 
 const SUPABASE_TABLE = "kpi_respuestas";
 
@@ -7,19 +9,22 @@ const LABELS = {
   name: "1. NOMBRES COMPLETOS:",
   role: "2. CARGO O ROL",
   area: "3. AREA O CANAL",
-  evalDate: "FECHA DE EVALUACI\u00d3N",
-  q4: "4. Canal principal de ventas",
-  q5: "5. A\u00f1os o meses de experiencia en ventas",
-  q6: "6. \u00bfCu\u00e1nto tiempo tardas en promedio en cerrar una venta?",
-  q7: "7. \u00bfCierras la venta en el primer contacto con el cliente?",
-  q8: "8. \u00bfSueles ofrecer m\u00e1s de un producto por venta?",
-  q9: "9. \u00bfAplic\u00e1s cross-selling (combos, productos complementarios)?",
-  q10: "10. Cuando un cliente no compra, \u00bfhaces seguimiento posterior?",
-  q11: "11. \u00bfCu\u00e1ntas veces haces Retargeting?",
-  q12: "12. \u00bfTienes un speech de ventas estructurado?",
-  q13: "13. \u00bfQu\u00e9 tan seguro(a) te sientes al vender?",
-  q14: "14. \u00bfCu\u00e1l consideras que es tu mayor dificultad al vender?",
-  q15: "15. \u00bfQu\u00e9 esperas mejorar en esta capacitaci\u00f3n?"
+  evalDate: "4.FECHA DE EVALUACI\u00d3N",
+  q4: "5. Canal principal de ventas",
+  q5: "6. A\u00f1os o meses de experiencia en ventas",
+  q6: "7. \u00bfCu\u00e1nto tiempo tardas en promedio en cerrar una venta?",
+  q7: "9. \u00bfCierras la venta en el primer contacto con el cliente?",
+  q8: "10. \u00bfSueles ofrecer m\u00e1s de un producto por venta?",
+  q9: "11. \u00bfAplic\u00e1s cross-selling (combos, productos complementarios)?",
+  q10: "12. Cuando un cliente no compra, \u00bfhaces seguimiento posterior?",
+  q11: "13. \u00bfCuantas veces haces Retargeting?",
+  q12: "14. \u00bfTienes un speech de ventas estructurado?",
+  q13: "15. \u00bfQu\u00e9 tan seguro(a) te sientes al vender?",
+  q14: "16. \u00bfCu\u00e1l consideras que es tu mayor dificultad al vender?",
+  q15: "19. \u00bfQu\u00e9 esperas mejorar en esta capacitaci\u00f3n?",
+  q8new: "8. \u00bfCuantas ventas cierras en una horas?",
+  q17: "17. Conoces el m\u00e9todo Upselling?",
+  q18: "18. Con que continuidad realizas Upselling?"
 };
 
 const HEADER_CANDIDATES = {
@@ -27,34 +32,40 @@ const HEADER_CANDIDATES = {
   name: ["1. nombres completos", "nombres completos"],
   role: ["2. cargo o rol", "cargo o rol"],
   area: ["3. area o canal", "area o canal"],
-  evalDate: ["fecha de evaluacion", "fecha evaluacion"],
-  q4: ["4. canal principal de ventas", "canal principal de ventas"],
-  q5: ["5. anos o meses de experiencia en ventas", "anos o meses de experiencia en ventas"],
-  q6: ["6. cuanto tiempo tardas en promedio en cerrar una venta", "cuanto tiempo tardas en promedio en cerrar una venta"],
-  q7: ["7. cierras la venta en el primer contacto con el cliente", "cierras la venta en el primer contacto con el cliente"],
-  q8: ["8. sueles ofrecer mas de un producto por venta", "sueles ofrecer mas de un producto por venta"],
-  q9: ["9. aplicas cross-selling", "aplicas cross-selling"],
-  q10: ["10. cuando un cliente no compra, haces seguimiento posterior", "cuando un cliente no compra, haces seguimiento posterior"],
-  q11: ["11. cuantas veces haces retargeting", "cuantas veces haces retargeting"],
-  q12: ["12. tienes un speech de ventas estructurado", "tienes un speech de ventas estructurado"],
-  q13: ["13. que tan seguro(a) te sientes al vender", "que tan seguro(a) te sientes al vender"],
-  q14: ["14. cual consideras que es tu mayor dificultad al vender", "cual consideras que es tu mayor dificultad al vender"],
-  q15: ["15. que esperas mejorar en esta capacitacion", "que esperas mejorar en esta capacitacion"]
+  evalDate: ["4.fecha de evaluacion", "4 fecha de evaluacion", "fecha de evaluacion", "fecha evaluacion"],
+  q4: ["5. canal principal de ventas", "canal principal de ventas"],
+  q5: ["6. anos o meses de experiencia en ventas", "anos o meses de experiencia en ventas"],
+  q6: ["7. cuanto tiempo tardas en promedio en cerrar una venta", "cuanto tiempo tardas en promedio en cerrar una venta"],
+  q7: ["9. cierras la venta en el primer contacto con el cliente", "cierras la venta en el primer contacto con el cliente"],
+  q8: ["10. sueles ofrecer mas de un producto por venta", "sueles ofrecer mas de un producto por venta"],
+  q9: ["11. aplicas cross-selling", "aplicas cross-selling"],
+  q10: ["12. cuando un cliente no compra, haces seguimiento posterior", "cuando un cliente no compra, haces seguimiento posterior"],
+  q11: ["13. cuantas veces haces retargeting", "cuantas veces haces retargeting"],
+  q12: ["14. tienes un speech de ventas estructurado", "tienes un speech de ventas estructurado"],
+  q13: ["15. que tan seguro(a) te sientes al vender", "que tan seguro(a) te sientes al vender"],
+  q14: ["16. cual consideras que es tu mayor dificultad al vender", "cual consideras que es tu mayor dificultad al vender"],
+  q15: ["19. que esperas mejorar en esta capacitacion", "que esperas mejorar en esta capacitacion"],
+  q8new: ["8. cuantas ventas cierras en una horas", "cuantas ventas cierras en una horas", "cuantas ventas cierras"],
+  q17: ["17. conoces el metodo upselling", "conoces el metodo upselling", "conoces upselling"],
+  q18: ["18. con que continuidad realizas upselling", "con que continuidad realizas upselling", "continuidad upselling"]
 };
 
 const OPTION_QUESTIONS = [
-  { key: "role", label: LABELS.role, options: ["SUPERVISOR", "JEFE DE AREA", "VENDEDOR", "APRENDIZ"], includeScore: false, includeOkr: false },
-  { key: "area", label: LABELS.area, options: ["WHATSAPP", "TIKTOK", "LIVE", "MESSENGER"], includeScore: false, includeOkr: false },
-  { key: "q4", label: LABELS.q4, options: ["WhatsApp", "Llamadas telef\u00f3nicas", "Ambos"] },
-  { key: "q5", label: LABELS.q5, options: ["Entre 1-3 meses", "Entre 3-6 meses", "Entre 6-12 meses", "M\u00e1s de un a\u00f1o"] },
-  { key: "q6", label: LABELS.q6, options: ["Generalmente no cierro en el primer contacto", "M\u00e1s de 20 minutos", "Entre 15 y 20 minutos", "Entre 10 y 15 minutos", "Menos de 10 minutos"] },
+  { key: "role", label: LABELS.role, options: ["SUPERVISOR", "JEFE DE AREA", "VENDEDOR", "APRENDIZ"], includeScore: false, includeOkr: false }, // Pregunta 2
+  { key: "area", label: LABELS.area, options: ["WHATSAPP", "TIKTOK", "LIVE", "MESSENGER", "MESENGER"], includeScore: false, includeOkr: false }, // Pregunta 3
+  { key: "q4", label: LABELS.q4, options: ["WhatsApp", "Llamadas telef\u00f3nicas", "Ambos"], includeScore: false, includeOkr: false }, // Pregunta 5
+  { key: "q5", label: LABELS.q5, options: ["Entre 1-3 meses", "Entre 3-6 meses", "Entre 6-12 meses", "M\u00e1s de un a\u00f1o"], includeScore: false, includeOkr: false }, // Pregunta 6
+  { key: "q6", label: LABELS.q6, options: ["Generalmente no cierro en el primer contacto", "M\u00e1s de 20 minutos", "Entre 15 y 20 minutos", "Entre 10 y 15 minutos", "Menos de 10 minutos"] }, // Pregunta 7 - Incluida en score
   { key: "q7", label: LABELS.q7, options: ["No", "S\u00ed"] },
   { key: "q8", label: LABELS.q8, options: ["Nunca", "A veces", "Siempre"] },
   { key: "q9", label: LABELS.q9, options: ["No", "A veces", "S\u00ed"] },
   { key: "q10", label: LABELS.q10, options: ["No", "S\u00ed"] },
   { key: "q11", label: LABELS.q11, options: ["No hago seguimiento", "1 vez", "2 a 3 veces", "M\u00e1s de 3 veces"] },
   { key: "q12", label: LABELS.q12, options: ["No", "M\u00e1s o menos", "S\u00ed"] },
-  { key: "q13", label: LABELS.q13, options: ["1", "2", "3", "4", "5"] }
+  { key: "q13", label: LABELS.q13, options: ["1", "2", "3", "4", "5"] },
+  { key: "q8new", label: LABELS.q8new, options: ["No", "1", "2", "3", "4", "5", "M\u00e1s de 5"], includeScore: true, includeOkr: true }, // Pregunta 8 - Incluida en score y OKR
+  { key: "q17", label: LABELS.q17, options: ["Si", "S\u00ed", "No"] }, // Pregunta 17 - Incluida en score
+  { key: "q18", label: LABELS.q18, options: ["1 vez", "2 veces", "3 veces", "M\u00e1s de 3 veces", "Nunca"] } // Pregunta 18 - Incluida en score
 ];
 
 const TEXT_FIELDS = [
@@ -72,6 +83,7 @@ const FORM_ORDER = [
   { type: "option", key: "q4" },
   { type: "option", key: "q5" },
   { type: "option", key: "q6" },
+  { type: "option", key: "q8new" },
   { type: "option", key: "q7" },
   { type: "option", key: "q8" },
   { type: "option", key: "q9" },
@@ -80,7 +92,39 @@ const FORM_ORDER = [
   { type: "option", key: "q12" },
   { type: "option", key: "q13" },
   { type: "text", key: "q14" },
+  { type: "option", key: "q17" },
+  { type: "option", key: "q18" },
   { type: "text", key: "q15" }
+];
+
+// ============================================
+// CONFIGURACIÓN DE NUEVAS COLUMNAS
+// ============================================
+// Añade aquí las nuevas columnas del Sheets
+// Formato:
+// {
+//   key: "q16",                    // Clave interna única (ej: q16, q17, etc.)
+//   headerVariants: ["16. pregunta", "pregunta"],  // Variantes del nombre en el CSV (normalizadas)
+//   label: "16. Pregunta completa", // Etiqueta para mostrar
+//   type: "option",                 // "option" | "text" | "date"
+//   options: ["Opción 1", "Opción 2"], // Solo si type === "option"
+//   includeScore: false,            // true si afecta el score KPI, false si no
+//   includeOkr: false,             // true si aparece en OKR, false si no
+//   formOrder: { type: "option", key: "q16" } // Añadir a FORM_ORDER si debe aparecer en formularios
+// }
+const NEW_COLUMNS_CONFIG = [
+  // Ejemplo de cómo añadir una nueva columna:
+  // {
+  //   key: "q16",
+  //   headerVariants: ["16. nueva pregunta", "nueva pregunta"],
+  //   label: "16. Nueva pregunta",
+  //   type: "option",
+  //   options: ["Sí", "No", "A veces"],
+  //   includeScore: false,  // Cambiar a true si debe afectar el score
+  //   includeOkr: false,
+  //   formOrder: { type: "option", key: "q16" }
+  // }
+  // Añade aquí tus nuevas columnas siguiendo este formato
 ];
 
 const els = {
@@ -109,6 +153,13 @@ const els = {
   csvStatus: document.getElementById("csvStatus"),
   csvTableHead: document.querySelector("#csvTable thead"),
   csvTableBody: document.querySelector("#csvTable tbody"),
+  recordSearch: document.getElementById("recordSearch"),
+  clearSearch: document.getElementById("clearSearch"),
+  prevRecord: document.getElementById("prevRecord"),
+  nextRecord: document.getElementById("nextRecord"),
+  recordIndex: document.getElementById("recordIndex"),
+  totalRecords: document.getElementById("totalRecords"),
+  dataSource: document.getElementById("dataSource"),
   compareA: document.getElementById("compareA"),
   compareB: document.getElementById("compareB"),
   comparePick: document.getElementById("comparePick"),
@@ -393,7 +444,9 @@ function parseCSV(text) {
     if ((char === "\n" || char === "\r") && !inQuotes) {
       if (char === "\r" && next === "\n") i++;
       row.push(current);
-      if (row.some((cell) => cell.trim() !== "")) data.push(row);
+      // Incluir todas las filas, incluso si están parcialmente vacías
+      // El filtrado se hará después en fetchCsv()
+      data.push(row);
       row = [];
       current = "";
       continue;
@@ -403,14 +456,52 @@ function parseCSV(text) {
   }
 
   row.push(current);
-  if (row.some((cell) => cell.trim() !== "")) data.push(row);
+  // Incluir la última fila si tiene contenido
+  if (row.length > 0) data.push(row);
   return data;
 }
+
+// Función para integrar automáticamente las nuevas columnas configuradas
+function integrateNewColumns() {
+  NEW_COLUMNS_CONFIG.forEach((config) => {
+    // Añadir a LABELS
+    LABELS[config.key] = config.label;
+    
+    // Añadir a HEADER_CANDIDATES
+    HEADER_CANDIDATES[config.key] = config.headerVariants;
+    
+    // Añadir a OPTION_QUESTIONS o TEXT_FIELDS según el tipo
+    if (config.type === "option") {
+      OPTION_QUESTIONS.push({
+        key: config.key,
+        label: config.label,
+        options: config.options || [],
+        includeScore: config.includeScore !== false, // Por defecto true si no se especifica
+        includeOkr: config.includeOkr !== false
+      });
+    } else if (config.type === "text" || config.type === "date") {
+      TEXT_FIELDS.push({
+        key: config.key,
+        label: config.label,
+        type: config.type
+      });
+    }
+    
+    // Añadir a FORM_ORDER si se especifica
+    if (config.formOrder) {
+      FORM_ORDER.push(config.formOrder);
+    }
+  });
+}
+
+// Integrar nuevas columnas al cargar el script
+integrateNewColumns();
 
 function resolveHeaders() {
   headerKeys = {};
   const normalizedHeaders = csvHeaders.map((h) => ({ raw: h, norm: normalize(h) }));
 
+  // Resolver headers conocidos originales
   Object.entries(HEADER_CANDIDATES).forEach(([key, candidates]) => {
     const normalizedCandidates = candidates.map(normalize);
     const match = normalizedHeaders.find((header) =>
@@ -452,6 +543,7 @@ function mapSupabaseRow(row) {
     [LABELS.q4]: row.canal_principal || "",
     [LABELS.q5]: row.experiencia || "",
     [LABELS.q6]: row.tiempo_cierre || "",
+    [LABELS.q8new]: row.ventas_por_hora || "",
     [LABELS.q7]: row.cierra_primer_contacto || "",
     [LABELS.q8]: row.upsell || "",
     [LABELS.q9]: row.cross_selling || "",
@@ -460,6 +552,8 @@ function mapSupabaseRow(row) {
     [LABELS.q12]: row.speech || "",
     [LABELS.q13]: row.confianza || "",
     [LABELS.q14]: row.dificultad || "",
+    [LABELS.q17]: row.conoce_upselling || "",
+    [LABELS.q18]: row.continuidad_upselling || "",
     [LABELS.q15]: row.mejora || ""
   };
 }
@@ -497,33 +591,133 @@ function collectOkrExportRows(row) {
   const source = row || lastRow || csvRows[0] || {};
   const { scores } = computeScore(source);
   return scores.map((score) => {
-    const pct = Math.round((score.score / 100) * 100) || 0;
     const state = getOkrState(score.score);
-    return [cleanDisplay(score.label), "100%", `${score.score}%`, `${pct}%`, state.label];
+    return [cleanDisplay(score.label), "100%", formatPercentage(score.score), formatPercentage(score.score), state.label];
   });
+}
+
+// Función helper para crear header profesional en PDFs
+function addPdfHeader(doc, title, logo, subtitle = null) {
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 40;
+  
+  // Fondo de header con color
+  doc.setFillColor(242, 68, 85);
+  doc.rect(0, 0, pageWidth, 100, "F");
+  
+  // Logo
+  if (logo) {
+    doc.addImage(logo, "JPEG", margin, 15, 50, 50);
+  }
+  
+  // Título principal
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  const titleX = logo ? margin + 60 : margin;
+  doc.text(title, titleX, 45);
+  
+  // Subtítulo si existe
+  if (subtitle) {
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(subtitle, titleX, 60);
+  }
+  
+  // Fecha y hora
+  doc.setFontSize(10);
+  const dateStr = new Date().toLocaleString("es-PE", { 
+    year: "numeric", 
+    month: "long", 
+    day: "numeric", 
+    hour: "2-digit", 
+    minute: "2-digit" 
+  });
+  doc.text(`Generado: ${dateStr}`, titleX, 75);
+  
+  // Línea decorativa
+  doc.setDrawColor(255, 255, 255);
+  doc.setLineWidth(1);
+  doc.line(titleX, 80, pageWidth - margin, 80);
+  
+  // Resetear color de texto
+  doc.setTextColor(0, 0, 0);
+}
+
+// Función helper para crear footer profesional
+function addPdfFooter(doc, pageNumber, totalPages) {
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margin = 40;
+  
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(128, 128, 128);
+  
+  // Información de la empresa
+  doc.text("La Jefita - Sistema de Gestión de Ventas", margin, pageHeight - 30);
+  
+  // Número de página
+  const pageText = `Página ${pageNumber} de ${totalPages}`;
+  const pageTextWidth = doc.getTextWidth(pageText);
+  doc.text(pageText, pageWidth - margin - pageTextWidth, pageHeight - 30);
+  
+  // Resetear color
+  doc.setTextColor(0, 0, 0);
 }
 
 async function exportKpiPdf() {
   if (!window.jspdf || !window.jspdf.jsPDF || !window.jspdf.jsPDF.API || !window.jspdf.jsPDF.API.autoTable) return;
   const source = lastRow || getFormRow("kpi-");
   const rows = collectKpiExportRows(source);
+  const { avg } = computeScore(source);
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const logo = await getLogoDataUrl();
-  if (logo) doc.addImage(logo, "JPEG", 40, 30, 36, 36);
+  
+  // Header profesional
+  addPdfHeader(doc, "Reporte KPI", logo, "Indicadores de Rendimiento");
+  
+  // Información del score
+  doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.text("Reporte KPI - La Jefita", 90, 55);
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(new Date().toLocaleString("es-PE"), 90, 72);
+  doc.setTextColor(242, 68, 85);
+  doc.text(`Score General: ${formatPercentage(avg)}`, 40, 130);
+  doc.setTextColor(0, 0, 0);
+  
+  // Tabla mejorada
   doc.autoTable({
-    startY: 90,
+    startY: 150,
     head: [["Campo", "Respuesta"]],
     body: rows,
-    styles: { font: "helvetica", fontSize: 9 },
-    headStyles: { fillColor: [242, 68, 85] }
+    theme: "striped",
+    styles: { 
+      font: "helvetica", 
+      fontSize: 10,
+      cellPadding: 8,
+      overflow: "linebreak",
+      cellWidth: "wrap"
+    },
+    headStyles: { 
+      fillColor: [242, 68, 85],
+      textColor: [255, 255, 255],
+      fontStyle: "bold",
+      fontSize: 11,
+      halign: "left"
+    },
+    alternateRowStyles: {
+      fillColor: [250, 250, 250]
+    },
+    columnStyles: {
+      0: { cellWidth: 180, fontStyle: "bold" },
+      1: { cellWidth: "auto" }
+    },
+    margin: { top: 150, left: 40, right: 40 },
+    didDrawPage: function(data) {
+      addPdfFooter(doc, data.pageNumber, data.pageCount);
+    }
   });
+  
   doc.save("kpi-reporte.pdf");
 }
 
@@ -546,24 +740,59 @@ function exportKpiXls() {
 
 async function exportOkrPdf() {
   if (!window.jspdf || !window.jspdf.jsPDF || !window.jspdf.jsPDF.API || !window.jspdf.jsPDF.API.autoTable) return;
-  const rows = collectOkrExportRows();
+  const source = lastRow || getFormRow("kpi-");
+  const rows = collectOkrExportRows(source);
+  const { avg } = computeScore(source);
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const logo = await getLogoDataUrl();
-  if (logo) doc.addImage(logo, "JPEG", 40, 30, 36, 36);
+  
+  // Header profesional
+  addPdfHeader(doc, "Reporte OKR", logo, "Objetivos y Resultados Clave");
+  
+  // Información del avance
+  doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.text("Reporte OKR - La Jefita", 90, 55);
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(new Date().toLocaleString("es-PE"), 90, 72);
+  doc.setTextColor(242, 68, 85);
+  doc.text(`Avance General: ${formatPercentage(avg)}`, 40, 130);
+  doc.setTextColor(0, 0, 0);
+  
+  // Tabla mejorada
   doc.autoTable({
-    startY: 90,
+    startY: 150,
     head: [["Objetivo", "KR (Meta)", "Actual", "% Avance", "Estado"]],
     body: rows,
-    styles: { font: "helvetica", fontSize: 9 },
-    headStyles: { fillColor: [242, 68, 85] }
+    theme: "striped",
+    styles: { 
+      font: "helvetica", 
+      fontSize: 9,
+      cellPadding: 6,
+      overflow: "linebreak",
+      cellWidth: "wrap"
+    },
+    headStyles: { 
+      fillColor: [242, 68, 85],
+      textColor: [255, 255, 255],
+      fontStyle: "bold",
+      fontSize: 10,
+      halign: "center"
+    },
+    alternateRowStyles: {
+      fillColor: [250, 250, 250]
+    },
+    columnStyles: {
+      0: { cellWidth: 120, halign: "left" },
+      1: { cellWidth: 80, halign: "center" },
+      2: { cellWidth: 80, halign: "center" },
+      3: { cellWidth: 70, halign: "center", fontStyle: "bold" },
+      4: { cellWidth: 70, halign: "center" }
+    },
+    margin: { top: 150, left: 40, right: 40 },
+    didDrawPage: function(data) {
+      addPdfFooter(doc, data.pageNumber, data.pageCount);
+    }
   });
+  
   doc.save("okr-reporte.pdf");
 }
 
@@ -593,20 +822,43 @@ async function exportComparePdf(getRows, filename) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const logo = await getLogoDataUrl();
-  if (logo) doc.addImage(logo, "JPEG", 40, 30, 36, 36);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.text("Comparativo KPI - La Jefita", 90, 55);
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(new Date().toLocaleString("es-PE"), 90, 72);
+  
+  // Header profesional
+  addPdfHeader(doc, "Comparativo KPI", logo, "Análisis Comparativo de Vendedores");
+  
+  // Tabla mejorada
   doc.autoTable({
-    startY: 90,
+    startY: 130,
     head: [["Campo", "Respuesta"]],
     body: getRows(),
-    styles: { font: "helvetica", fontSize: 9 },
-    headStyles: { fillColor: [242, 68, 85] }
+    theme: "striped",
+    styles: { 
+      font: "helvetica", 
+      fontSize: 10,
+      cellPadding: 8,
+      overflow: "linebreak",
+      cellWidth: "wrap"
+    },
+    headStyles: { 
+      fillColor: [242, 68, 85],
+      textColor: [255, 255, 255],
+      fontStyle: "bold",
+      fontSize: 11,
+      halign: "left"
+    },
+    alternateRowStyles: {
+      fillColor: [250, 250, 250]
+    },
+    columnStyles: {
+      0: { cellWidth: 180, fontStyle: "bold" },
+      1: { cellWidth: "auto" }
+    },
+    margin: { top: 130, left: 40, right: 40 },
+    didDrawPage: function(data) {
+      addPdfFooter(doc, data.pageNumber, data.pageCount);
+    }
   });
+  
   doc.save(filename);
 }
 
@@ -642,20 +894,161 @@ function formatSupabaseLabel(row) {
   return `${name} · ${date} ${time}`;
 }
 
+// Configuración de scoring: mejor respuesta y porcentajes para cada pregunta
+const SCORING_CONFIG = {
+  // Pregunta 7: ¿Cuánto tiempo tardas en promedio en cerrar una venta?
+  q6: {
+    best: "Menos de 10 minutos",
+    scores: {
+      "Menos de 10 minutos": 100,
+      "Entre 10 y 15 minutos": 80,
+      "Entre 15 y 20 minutos": 60,
+      "Más de 20 minutos": 30,
+      "Generalmente no cierro en el primer contacto": 0
+    }
+  },
+  // Pregunta 8: ¿Cuantas ventas cierras en una horas?
+  q8new: {
+    best: "Más de 5",
+    scores: {
+      "Más de 5": 100,
+      "5": 85,
+      "4": 70,
+      "3": 55,
+      "2": 40,
+      "1": 25,
+      "No": 0
+    }
+  },
+  // Pregunta 9: ¿Cierras la venta en el primer contacto con el cliente?
+  q7: {
+    best: "Sí",
+    scores: {
+      "Sí": 100,
+      "No": 0
+    }
+  },
+  // Pregunta 10: ¿Sueles ofrecer más de un producto por venta?
+  q8: {
+    best: "Siempre",
+    scores: {
+      "Siempre": 100,
+      "A veces": 50,
+      "Nunca": 0
+    }
+  },
+  // Pregunta 11: ¿Aplicás cross-selling?
+  q9: {
+    best: "Sí",
+    scores: {
+      "Sí": 100,
+      "A veces": 50,
+      "No": 0
+    }
+  },
+  // Pregunta 12: Cuando un cliente no compra, ¿haces seguimiento posterior?
+  q10: {
+    best: "Sí",
+    scores: {
+      "Sí": 100,
+      "No": 0
+    }
+  },
+  // Pregunta 13: ¿Cuantas veces haces Retargeting?
+  q11: {
+    best: "Más de 3 veces",
+    scores: {
+      "Más de 3 veces": 100,
+      "2 a 3 veces": 75,
+      "1 vez": 50,
+      "No hago seguimiento": 0
+    }
+  },
+  // Pregunta 14: ¿Tienes un speech de ventas estructurado?
+  q12: {
+    best: "Sí",
+    scores: {
+      "Sí": 100,
+      "Más o menos": 50,
+      "No": 0
+    }
+  },
+  // Pregunta 15: ¿Qué tan seguro(a) te sientes al vender?
+  q13: {
+    best: "5",
+    scores: {
+      "5": 100,
+      "4": 75,
+      "3": 50,
+      "2": 25,
+      "1": 0
+    }
+  },
+  // Pregunta 17: Conoces el método Upselling?
+  q17: {
+    best: "Sí",
+    scores: {
+      "Sí": 100,
+      "Si": 100, // Variante
+      "No": 0
+    }
+  },
+  // Pregunta 18: Con que continuidad realizas Upselling?
+  q18: {
+    best: "Más de 3 veces",
+    scores: {
+      "Más de 3 veces": 100,
+      "3 veces": 75,
+      "2 veces": 50,
+      "1 vez": 25,
+      "Nunca": 0
+    }
+  }
+};
+
 function orderedOptions(question) {
-  const best = okrBest[question.key];
-  if (!best) return question.options;
+  const best = okrBest[question.key] || (SCORING_CONFIG[question.key]?.best) || question.options[question.options.length - 1];
   const rest = question.options.filter((opt) => opt !== best);
   return [...rest, best];
 }
 
 function optionScore(question, value) {
+  // Si hay configuración específica de scoring, usarla
+  const config = SCORING_CONFIG[question.key];
+  if (config && config.scores) {
+    const normalizedValue = normalize(value);
+    // Buscar coincidencia exacta o parcial
+    for (const [option, score] of Object.entries(config.scores)) {
+      if (normalize(option) === normalizedValue) {
+        return score;
+      }
+    }
+    // Si no hay coincidencia exacta, retornar 0
+    return 0;
+  }
+  
+  // Sistema de scoring por defecto (basado en posición, más gradual)
   const normalized = normalize(value);
   const options = orderedOptions(question).map((opt) => normalize(opt));
   const idx = options.indexOf(normalized);
   if (idx === -1) return 0;
   if (options.length === 1) return 100;
-  return Math.round((idx / (options.length - 1)) * 100);
+  
+  // Cálculo más realista: distribución más gradual
+  // La mejor opción (última) = 100%, la peor (primera) = 0%
+  // Distribución más suave para opciones intermedias
+  const totalOptions = options.length;
+  if (totalOptions === 2) {
+    // Solo 2 opciones: 0% o 100%
+    return idx === totalOptions - 1 ? 100 : 0;
+  }
+  
+  // Para 3+ opciones: distribución más gradual
+  // Usar una curva más suave (cuadrática) para mejor distribución
+  const progress = idx / (totalOptions - 1);
+  // Aplicar curva suave: progresión más gradual al inicio, más rápida al final
+  const smoothProgress = progress * progress;
+  return Math.round(smoothProgress * 100);
 }
 
 function computeScore(row) {
@@ -669,7 +1062,8 @@ function computeScore(row) {
     };
   });
   const total = scores.reduce((sum, s) => sum + s.score, 0);
-  const avg = scores.length ? Math.round(total / scores.length) : 0;
+  // Calcular promedio con más precisión (1 decimal)
+  const avg = scores.length ? Math.round((total / scores.length) * 10) / 10 : 0;
   return { avg, scores };
 }
 
@@ -691,6 +1085,7 @@ function buildForms() {
   const buildField = (prefix, entry) => {
     if (entry.type === "text") {
       const field = fieldByKey(entry.key);
+      if (!field) return ""; // Si no se encuentra el campo, retornar vacío
       return `
         <div class="field">
           <label for="${prefix}${field.key}">${cleanDisplay(field.label)}</label>
@@ -699,6 +1094,10 @@ function buildForms() {
       `;
     }
     const question = questionByKey(entry.key);
+    if (!question) {
+      console.warn(`⚠️ Pregunta no encontrada: ${entry.key}`);
+      return ""; // Si no se encuentra la pregunta, retornar vacío
+    }
     const options = question.options
       .map((opt) => `<option value="${opt}">${cleanDisplay(opt)}</option>`)
       .join("");
@@ -725,8 +1124,10 @@ function buildForms() {
 function buildOkrConfig() {
   if (!els.okrConfigBody) return;
   els.okrConfigBody.innerHTML = okrQuestions().map((q) => {
+    // Usar la mejor respuesta de SCORING_CONFIG si está disponible, sino usar okrBest o la última opción
+    const bestOption = okrBest[q.key] || SCORING_CONFIG[q.key]?.best || q.options[q.options.length - 1];
     const options = q.options.map((opt) => {
-      const selected = okrBest[q.key] === opt ? "selected" : "";
+      const selected = bestOption === opt ? "selected" : "";
       return `<option value="${opt}" ${selected}>${cleanDisplay(opt)}</option>`;
     }).join("");
     return `
@@ -741,6 +1142,13 @@ function buildOkrConfig() {
     `;
   }).join("");
   enhanceSelects();
+  
+  // Inicializar okrBest con las mejores respuestas de SCORING_CONFIG
+  okrQuestions().forEach((q) => {
+    if (SCORING_CONFIG[q.key]?.best && !okrBest[q.key]) {
+      okrBest[q.key] = SCORING_CONFIG[q.key].best;
+    }
+  });
 }
 
 function getFormRow(prefix) {
@@ -763,6 +1171,7 @@ function applyRowToForm(row) {
     const raw = getRowValue(row, q.key, q.label);
     const match = q.options.find((opt) => normalize(opt) === normalize(raw));
     el.value = match || "";
+    refreshCustomSelect(el);
   });
   TEXT_FIELDS.forEach((field) => {
     const el = document.getElementById(`kpi-${field.key}`);
@@ -770,38 +1179,48 @@ function applyRowToForm(row) {
   });
 }
 
+function formatPercentage(value, decimals = 1) {
+  if (value === 0) return "0%";
+  if (value === 100) return "100%";
+  // Mostrar decimales solo si es necesario (no es entero)
+  const rounded = Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+  return rounded % 1 === 0 ? `${Math.round(rounded)}%` : `${rounded.toFixed(decimals)}%`;
+}
+
 function renderKPI(row) {
   const data = row || getFormRow("kpi-");
   const { avg, scores } = computeScore(data);
   lastRow = data;
 
-  if (els.kpiScore) els.kpiScore.textContent = `${avg}%`;
-  if (els.kpiStatus) els.kpiStatus.textContent = `Score: ${avg}%`;
+  const avgFormatted = formatPercentage(avg);
+  if (els.kpiScore) els.kpiScore.textContent = avgFormatted;
+  if (els.kpiStatus) els.kpiStatus.textContent = `Score: ${avgFormatted}`;
   if (els.kpiMeterFill) els.kpiMeterFill.style.width = `${avg}%`;
   if (els.kpiBreakdown) {
     els.kpiBreakdown.innerHTML = scores.map((s) => `
       <li>
         <span>${cleanDisplay(s.label)}</span>
-        <strong>${s.score}%</strong>
+        <strong>${formatPercentage(s.score)}</strong>
       </li>
     `).join("");
   }
 
-  if (els.okrStatus) els.okrStatus.textContent = `Avance: ${avg}%`;
+  if (els.okrStatus) els.okrStatus.textContent = `Avance: ${avgFormatted}`;
   if (els.okrBody) renderOKR(scores);
 }
 
 function renderOKR(scores) {
   if (!els.okrBody) return;
   els.okrBody.innerHTML = scores.map((s) => {
-    const pct = Math.round((s.score / 100) * 100) || 0;
+    // El porcentaje de avance es simplemente el score (ya está en 0-100)
+    const pct = s.score;
     const state = getOkrState(s.score);
     return `
       <tr>
         <td>${cleanDisplay(s.label)}</td>
         <td><span class="okr-pill">100%</span></td>
-        <td>${s.score}%</td>
-        <td>${pct}%</td>
+        <td>${formatPercentage(s.score)}</td>
+        <td>${formatPercentage(pct)}</td>
         <td><span class="okr-state ${state.className}">${state.label}</span></td>
       </tr>
     `;
@@ -821,8 +1240,14 @@ function resetAll() {
   FORM_ORDER.forEach((entry) => {
     const kpiEl = document.getElementById(`kpi-${entry.key}`);
     const sbEl = document.getElementById(`sb-${entry.key}`);
-    if (kpiEl) kpiEl.value = "";
-    if (sbEl) sbEl.value = "";
+    if (kpiEl) {
+      kpiEl.value = "";
+      if (kpiEl.tagName === "SELECT") refreshCustomSelect(kpiEl);
+    }
+    if (sbEl) {
+      sbEl.value = "";
+      if (sbEl.tagName === "SELECT") refreshCustomSelect(sbEl);
+    }
   });
   renderKPI();
 }
@@ -874,6 +1299,10 @@ function buildSupabaseOptions() {
     })
     .join("");
   els.sbName.innerHTML = html;
+  
+  // No seleccionar ningún valor automáticamente - siempre mostrar "Selecciona..."
+  els.sbName.value = "";
+  
   refreshCustomSelect(els.sbName);
 }
 
@@ -925,6 +1354,10 @@ function loadSupabaseSelection() {
   const mapped = mapSupabaseRow(match);
   applyRowToForm(mapped);
   renderKPI(mapped);
+  
+  // Regresar el dropdown a "Selecciona..." después de cargar
+  els.sbName.value = "";
+  refreshCustomSelect(els.sbName);
 }
 
 function getCompareRow(name, pick) {
@@ -950,9 +1383,9 @@ function renderCompare() {
     cards.push(`
       <div class="compare-card">
         <h3>${cleanDisplay(els.compareA.value)}</h3>
-        <div class="compare-meta">Score: ${scoreA.avg}%</div>
+        <div class="compare-meta">Score: ${formatPercentage(scoreA.avg)}</div>
         <ul class="kpi-list">
-          ${scoreA.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${s.score}%</strong></li>`).join("")}
+          ${scoreA.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${formatPercentage(s.score)}</strong></li>`).join("")}
         </ul>
       </div>
     `);
@@ -962,9 +1395,9 @@ function renderCompare() {
     cards.push(`
       <div class="compare-card">
         <h3>${cleanDisplay(els.compareB.value)}</h3>
-        <div class="compare-meta">Score: ${scoreB.avg}%</div>
+        <div class="compare-meta">Score: ${formatPercentage(scoreB.avg)}</div>
         <ul class="kpi-list">
-          ${scoreB.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${s.score}%</strong></li>`).join("")}
+          ${scoreB.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${formatPercentage(s.score)}</strong></li>`).join("")}
         </ul>
       </div>
     `);
@@ -985,9 +1418,9 @@ function renderCompareSupabase() {
     cards.push(`
       <div class="compare-card">
         <h3>${cleanDisplay(formatSupabaseLabel(rowA))}</h3>
-        <div class="compare-meta">Score: ${scoreA.avg}%</div>
+        <div class="compare-meta">Score: ${formatPercentage(scoreA.avg)}</div>
         <ul class="kpi-list">
-          ${scoreA.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${s.score}%</strong></li>`).join("")}
+          ${scoreA.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${formatPercentage(s.score)}</strong></li>`).join("")}
         </ul>
       </div>
     `);
@@ -999,9 +1432,9 @@ function renderCompareSupabase() {
     cards.push(`
       <div class="compare-card">
         <h3>${cleanDisplay(formatSupabaseLabel(rowB))}</h3>
-        <div class="compare-meta">Score: ${scoreB.avg}%</div>
+        <div class="compare-meta">Score: ${formatPercentage(scoreB.avg)}</div>
         <ul class="kpi-list">
-          ${scoreB.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${s.score}%</strong></li>`).join("")}
+          ${scoreB.scores.map((s) => `<li><span>${cleanDisplay(s.label)}</span><strong>${formatPercentage(s.score)}</strong></li>`).join("")}
         </ul>
       </div>
     `);
@@ -1031,7 +1464,7 @@ function renderScoreboard() {
     ? top.map((item, idx) => `
         <li>
           <span>${cleanDisplay(item.name)}</span>
-          <span class="score-badge">${item.score}%</span>
+          <span class="score-badge">${formatPercentage(item.score)}</span>
         </li>
       `).join("")
     : "<li>Sin datos</li>";
@@ -1099,19 +1532,118 @@ function renderCharts() {
   }).join("");
 }
 
-function renderCsvTable() {
+let filteredRows = [];
+let currentIndex = 0;
+let currentDataSource = "csv"; // "csv" o "supabase"
+
+function filterRows(searchTerm = "") {
+  const source = currentDataSource === "supabase" ? supabaseRows : csvRows;
+  
+  if (!searchTerm.trim()) {
+    filteredRows = source;
+  } else {
+    const term = searchTerm.toLowerCase().trim();
+    filteredRows = source.filter((row) => {
+      // Si es Supabase, mapear primero a formato estándar
+      const rowToSearch = currentDataSource === "supabase" ? mapSupabaseRow(row) : row;
+      return Object.values(rowToSearch).some((value) => {
+        const str = String(cleanCellValue(value)).toLowerCase();
+        return str.includes(term);
+      });
+    });
+  }
+  currentIndex = 0;
+  updateNavigation();
+  renderDataTable();
+}
+
+function switchDataSource(source) {
+  currentDataSource = source;
+  if (source === "supabase" && supabaseRows.length === 0) {
+    refreshSupabase();
+  }
+  filterRows(els.recordSearch?.value || "");
+  updateStatus();
+}
+
+function updateStatus() {
+  if (!els.csvStatus) return;
+  const count = currentDataSource === "supabase" ? supabaseRows.length : csvRows.length;
+  const sourceLabel = currentDataSource === "supabase" ? "Supabase" : "CSV";
+  els.csvStatus.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+    </svg>
+    ${sourceLabel}: ${count} filas
+  `;
+  
+  // Actualizar título del panel
+  const dataTitle = document.getElementById("dataTitle");
+  if (dataTitle) {
+    dataTitle.textContent = currentDataSource === "supabase" ? "Datos de Supabase" : "Datos del CSV";
+  }
+}
+
+function updateNavigation() {
+  const total = filteredRows.length;
+  if (els.totalRecords) els.totalRecords.textContent = total;
+  if (els.recordIndex) els.recordIndex.textContent = total > 0 ? currentIndex + 1 : 0;
+  if (els.prevRecord) els.prevRecord.disabled = currentIndex === 0 || total === 0;
+  if (els.nextRecord) els.nextRecord.disabled = currentIndex >= total - 1 || total === 0;
+}
+
+function showRecord(index) {
+  if (index < 0 || index >= filteredRows.length) return;
+  currentIndex = index;
+  updateNavigation();
+  renderDataTable();
+}
+
+function renderDataTable() {
   if (!els.csvTableHead || !els.csvTableBody) return;
-  const visibleHeaders = csvHeaders.filter((h) =>
-    csvRows.some((row) => cleanCellValue(row[h]))
-  );
-  const head = visibleHeaders.map((h) => `<th>${cleanDisplay(h)}</th>`).join("");
+  if (filteredRows.length === 0) {
+    els.csvTableHead.innerHTML = "";
+    els.csvTableBody.innerHTML = `<tr><td colspan="100" style="text-align:center;padding:40px;color:var(--text-muted);">No se encontraron registros</td></tr>`;
+    return;
+  }
+  
+  let headersToShow = [];
+  let currentRow = null;
+  
+  if (currentDataSource === "supabase") {
+    // Para Supabase, usar las labels estándar
+    const mappedRow = mapSupabaseRow(filteredRows[currentIndex] || {});
+    headersToShow = Object.keys(mappedRow).filter((key) => {
+      const value = cleanCellValue(mappedRow[key]);
+      return value && value.trim() !== "";
+    });
+    currentRow = mappedRow;
+  } else {
+    // Para CSV, usar las columnas del CSV
+    const visibleHeaders = csvHeaders.filter((h) => {
+      return filteredRows.some((row) => {
+        const value = cleanCellValue(row[h]);
+        return value && value.trim() !== "";
+      });
+    });
+    headersToShow = visibleHeaders.length > 0 ? visibleHeaders : csvHeaders;
+    currentRow = filteredRows[currentIndex];
+  }
+  
+  const head = headersToShow.map((h) => `<th>${cleanDisplay(h)}</th>`).join("");
   els.csvTableHead.innerHTML = `<tr>${head}</tr>`;
-  els.csvTableBody.innerHTML = csvRows.map((row) => {
-    const cells = visibleHeaders
-      .map((h) => `<td><div class="cell-clamp">${cleanCellValue(row[h])}</div></td>`)
-      .join("");
-    return `<tr>${cells}</tr>`;
-  }).join("");
+  
+  // Mostrar solo el registro actual
+  const cells = headersToShow
+    .map((h) => `<td data-label="${cleanDisplay(h)}"><div class="cell-clamp">${cleanCellValue(currentRow[h])}</div></td>`)
+    .join("");
+  els.csvTableBody.innerHTML = `<tr>${cells}</tr>`;
+}
+
+// Mantener compatibilidad con nombre anterior
+function renderCsvTable() {
+  renderDataTable();
 }
 
 async function fetchCsv() {
@@ -1125,14 +1657,74 @@ async function fetchCsv() {
   text = fixMojibake(text);
   const data = parseCSV(text);
   csvHeaders = data[0] || [];
-  csvRows = data.slice(1).map((row) => {
-    const obj = {};
-    csvHeaders.forEach((h, i) => {
-      obj[h] = row[i] || "";
+  
+  // Procesar TODAS las filas del CSV, incluyendo filas con datos parciales
+  csvRows = data.slice(1)
+    .map((row) => {
+      const obj = {};
+      csvHeaders.forEach((h, i) => {
+        obj[h] = row[i] !== undefined ? String(row[i]).trim() : "";
+      });
+      return obj;
+    })
+    // Filtrar solo filas completamente vacías, mantener todas las que tengan al menos un dato
+    .filter((row) => {
+      return Object.values(row).some((val) => val && String(val).trim() !== "");
     });
-    return obj;
-  });
+  
+  console.log(`✅ CSV cargado: ${csvHeaders.length} columnas, ${csvRows.length} filas procesadas`);
+  console.log(`📋 Columnas detectadas:`, csvHeaders);
+  
+  // Resolver headers conocidos
   resolveHeaders();
+  
+  // Detectar y analizar columnas nuevas no mapeadas
+  const mappedHeaders = Object.values(headerKeys);
+  const unmappedHeaders = csvHeaders.filter(h => h && !mappedHeaders.includes(h));
+  if (unmappedHeaders.length > 0) {
+    console.log(`🆕 Columnas nuevas detectadas (${unmappedHeaders.length}):`, unmappedHeaders);
+    console.log(`💡 Estas columnas se mostrarán en la tabla pero no están mapeadas para cálculos KPI/OKR`);
+    
+    // Analizar valores de las nuevas columnas para sugerir tipo
+    analyzeNewColumns(unmappedHeaders);
+  }
+}
+
+// Función para analizar nuevas columnas y sugerir su configuración
+function analyzeNewColumns(columnHeaders) {
+  if (!csvRows || csvRows.length === 0) return;
+  
+  console.log(`\n📊 Análisis de nuevas columnas:`);
+  columnHeaders.forEach((header, idx) => {
+    // Obtener valores únicos de esta columna
+    const values = csvRows
+      .map(row => cleanCellValue(row[header]))
+      .filter(v => v && v.trim() !== "")
+      .slice(0, 20); // Limitar a primeros 20 para análisis
+    
+    const uniqueValues = Array.from(new Set(values));
+    const isNumeric = values.some(v => !isNaN(parseFloat(v)) && isFinite(v));
+    const isDate = values.some(v => {
+      const d = new Date(v);
+      return !isNaN(d.getTime());
+    });
+    const isOption = uniqueValues.length <= 10 && uniqueValues.length > 0;
+    
+    let suggestedType = "text";
+    if (isDate) suggestedType = "date";
+    else if (isOption) suggestedType = "option";
+    
+    console.log(`\n${idx + 1}. "${header}"`);
+    console.log(`   Tipo sugerido: ${suggestedType}`);
+    console.log(`   Valores únicos encontrados (${uniqueValues.length}):`, uniqueValues.slice(0, 10));
+    if (uniqueValues.length > 10) console.log(`   ... y ${uniqueValues.length - 10} más`);
+  });
+  
+  console.log(`\n💡 Para integrar estas columnas, necesito saber:`);
+  console.log(`   1. Qué tipo de campo es cada una (text/option/date)`);
+  console.log(`   2. Si es opción, cuáles son las opciones válidas`);
+  console.log(`   3. Si afecta el score KPI (includeScore: true/false)`);
+  console.log(`   4. Si debe aparecer en OKR (includeOkr: true/false)`);
 }
 
 async function refreshCsv() {
@@ -1141,9 +1733,13 @@ async function refreshCsv() {
     await fetchCsv();
     buildNameOptions();
     renderScoreboard();
+    if (currentDataSource === "csv") {
+      filterRows(els.recordSearch?.value || "");
+      updateStatus();
+    }
     renderChanges();
     renderCharts();
-    renderCsvTable();
+    filterRows(els.recordSearch ? els.recordSearch.value : "");
     renderCompare();
     buildOkrConfig();
     if (els.csvStatus) els.csvStatus.textContent = `CSV: ${csvRows.length} filas`;
@@ -1177,6 +1773,10 @@ async function refreshSupabase() {
     buildSupabaseOptions();
     buildSupabaseCompareOptions();
     if (els.sbStatus) els.sbStatus.textContent = `Supabase: ${supabaseRows.length} registros`;
+    if (currentDataSource === "supabase") {
+      filterRows(els.recordSearch?.value || "");
+      updateStatus();
+    }
   } catch (err) {
     if (els.sbStatus) els.sbStatus.textContent = "Supabase: error";
   }
@@ -1237,7 +1837,7 @@ const needsCsv = [
   els.charts
 ].some(Boolean);
 if (needsCsv) refreshCsv();
-if (els.sbName) refreshSupabase();
+if (els.sbName || els.dataSource) refreshSupabase();
 
 if (els.kpiForm) els.kpiForm.addEventListener("change", () => renderKPI());
 if (els.okrConfigBody) {
@@ -1266,6 +1866,52 @@ if (els.btnResetAll) els.btnResetAll.addEventListener("click", resetAll);
 if (els.btnRefreshCsv) els.btnRefreshCsv.addEventListener("click", refreshCsv);
 if (els.btnLoadCsv) els.btnLoadCsv.addEventListener("click", loadCsvSelection);
 if (els.csvName) els.csvName.addEventListener("change", loadCsvSelection);
+
+// Event listeners para búsqueda y navegación de registros
+if (els.recordSearch) {
+  els.recordSearch.addEventListener("input", (e) => {
+    filterRows(e.target.value);
+    if (els.clearSearch) els.clearSearch.style.display = e.target.value ? "flex" : "none";
+  });
+  els.recordSearch.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") e.preventDefault();
+  });
+}
+
+if (els.clearSearch) {
+  els.clearSearch.addEventListener("click", () => {
+    if (els.recordSearch) {
+      els.recordSearch.value = "";
+      els.recordSearch.focus();
+      filterRows("");
+      els.clearSearch.style.display = "none";
+    }
+  });
+}
+
+if (els.prevRecord) {
+  els.prevRecord.addEventListener("click", () => {
+    if (currentIndex > 0) showRecord(currentIndex - 1);
+  });
+}
+
+if (els.nextRecord) {
+  els.nextRecord.addEventListener("click", () => {
+    if (currentIndex < filteredRows.length - 1) showRecord(currentIndex + 1);
+  });
+}
+
+// Navegación con teclado
+document.addEventListener("keydown", (e) => {
+  if (document.activeElement === els.recordSearch) return;
+  if (e.key === "ArrowLeft" && els.prevRecord && !els.prevRecord.disabled) {
+    e.preventDefault();
+    els.prevRecord.click();
+  } else if (e.key === "ArrowRight" && els.nextRecord && !els.nextRecord.disabled) {
+    e.preventDefault();
+    els.nextRecord.click();
+  }
+});
 if (els.csvPick) els.csvPick.addEventListener("change", loadCsvSelection);
 if (els.btnLoadSupabase) els.btnLoadSupabase.addEventListener("click", loadSupabaseSelection);
 if (els.sbName) els.sbName.addEventListener("change", loadSupabaseSelection);
@@ -1325,3 +1971,14 @@ if (els.btnExportCompareSbXls) {
   });
 }
 
+// Event listener para cambiar entre CSV y Supabase en la página de datos
+if (els.dataSource) {
+  els.dataSource.addEventListener("change", (e) => {
+    switchDataSource(e.target.value);
+  });
+  // Inicializar con el valor por defecto
+  if (els.dataSource.value) {
+    currentDataSource = els.dataSource.value;
+    switchDataSource(els.dataSource.value);
+  }
+}

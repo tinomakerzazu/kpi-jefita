@@ -126,6 +126,13 @@
           </svg>
           Nuevo registro
         </a>
+        <a class="nav-link" href="ventas-diarias.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Ventas Diarias
+        </a>
       </details>
     </aside>
 
@@ -142,7 +149,7 @@
               </svg>
             </div>
             <div>
-              <h2>Datos del CSV</h2>
+              <h2 id="dataTitle">Datos del CSV</h2>
               <span class="muted">Tabla de respuestas publicadas</span>
             </div>
           </div>
@@ -155,6 +162,52 @@
           </div>
         </div>
         <div class="panel-body">
+          <div class="record-filter-container">
+            <div class="field field-enhanced" style="max-width: 200px;">
+              <label for="dataSource">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                Origen de datos
+              </label>
+              <select id="dataSource">
+                <option value="csv">CSV</option>
+                <option value="supabase">Supabase</option>
+              </select>
+            </div>
+            <div class="search-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <input type="text" id="recordSearch" placeholder="Buscar por nombre, cargo, área, fecha..." autocomplete="off">
+              <button class="btn-clear-search" id="clearSearch" style="display:none;" title="Limpiar búsqueda">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="record-navigation">
+              <button class="btn-nav" id="prevRecord" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Anterior
+              </button>
+              <div class="record-counter">
+                <span id="recordIndex">0</span> de <span id="totalRecords">0</span>
+              </div>
+              <button class="btn-nav" id="nextRecord" disabled>
+                Siguiente
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
           <div class="table-wrap table-wrap-enhanced">
             <table id="csvTable">
               <thead></thead>

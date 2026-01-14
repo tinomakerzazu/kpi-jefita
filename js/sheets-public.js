@@ -100,7 +100,7 @@ function buildTable(filteredRows) {
     return;
   }
   els.tableBody.innerHTML = filteredRows
-    .map((row) => `<tr>${visibleHeaders.map((h) => `<td>${row[h] || ""}</td>`).join("")}</tr>`)
+    .map((row) => `<tr>${visibleHeaders.map((h) => `<td data-label="${h}">${row[h] || ""}</td>`).join("")}</tr>`)
     .join("");
 }
 
