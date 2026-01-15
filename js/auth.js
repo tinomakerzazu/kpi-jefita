@@ -105,7 +105,30 @@
         }),
       });
 
-      const data = await response.json();
+      // Manejar respuesta según el status
+      let data;
+      if (response.status === 429) {
+        // Rate limit excedido
+        try {
+          data = await response.json();
+        } catch (e) {
+          data = { error: "Demasiados intentos. Por favor espera unos minutos antes de intentar nuevamente." };
+        }
+        setError(data.error || "Demasiados intentos de login. Por favor espera unos minutos.");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        return;
+      }
+
+      try {
+        data = await response.json();
+      } catch (e) {
+        // Si no es JSON, puede ser un error de red o respuesta inesperada
+        setError("Error inesperado del servidor. Intenta nuevamente.");
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        return;
+      }
 
       if (!response.ok) {
         setError(data.error || "Credenciales incorrectas o usuario no registrado.");

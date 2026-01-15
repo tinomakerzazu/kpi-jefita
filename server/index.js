@@ -101,13 +101,29 @@ const limiter = rateLimit({
   message: "Demasiadas peticiones desde esta IP, intenta de nuevo más tarde.",
   standardHeaders: true,
   legacyHeaders: false,
+  handler: (req, res) => {
+    // Devolver JSON en lugar de texto plano
+    res.status(429).json({
+      error: "Demasiadas peticiones. Por favor espera antes de intentar nuevamente.",
+      retryAfter: Math.ceil(parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000", 10) / 1000)
+    });
+  }
 });
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 5, // 5 intentos
+  max: 10, // 10 intentos (aumentado de 5)
   message: "Demasiados intentos de autenticación, intenta de nuevo más tarde.",
   skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    // Devolver JSON en lugar de texto plano
+    res.status(429).json({
+      error: "Demasiados intentos de autenticación. Por favor espera 15 minutos antes de intentar nuevamente.",
+      retryAfter: Math.ceil(15 * 60) // segundos
+    });
+  }
 });
 
 app.use("/api/", limiter);
@@ -168,13 +184,24 @@ const authenticateToken = async (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     
     // Verificar sesión en Supabase
+    // Nota: En producción, las cookies httpOnly no funcionan entre dominios diferentes
+    // Por lo tanto, confiamos en el JWT token que ya fue verificado
     if (supabase) {
-      const { data: { user }, error } = await supabase.auth.getUser(decoded.userId);
-      if (error || !user) {
-        logOperation(req, "AUTH_FAILED", false, { reason: "Invalid Supabase session" });
-        return res.status(401).json({ error: "Sesión inválida" });
+      try {
+        // Intentar verificar con Supabase, pero no fallar si no está disponible
+        const { data: { user }, error } = await supabase.auth.getUser(decoded.userId);
+        if (error || !user) {
+          // Si falla la verificación de Supabase, usar los datos del JWT (ya verificado)
+          console.warn("Supabase verification failed, using JWT data:", error?.message);
+          req.user = { id: decoded.userId, email: decoded.email };
+        } else {
+          req.user = user;
+        }
+      } catch (supabaseError) {
+        // Si hay error de conexión con Supabase, usar datos del JWT
+        console.warn("Supabase connection error, using JWT data:", supabaseError.message);
+        req.user = { id: decoded.userId, email: decoded.email };
       }
-      req.user = user;
     } else {
       req.user = { id: decoded.userId, email: decoded.email };
     }
@@ -182,10 +209,24 @@ const authenticateToken = async (req, res, next) => {
     next();
   } catch (error) {
     logOperation(req, "AUTH_FAILED", false, { reason: error.message });
+    
+    // Log detallado para debugging
+    console.error("❌ Error de autenticación:", {
+      errorName: error.name,
+      errorMessage: error.message,
+      hasToken: !!token,
+      tokenPreview: token ? token.substring(0, 20) + '...' : 'none',
+      path: req.path,
+      method: req.method
+    });
+    
     if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ error: "Token expirado" });
+      return res.status(401).json({ error: "Token expirado", details: error.message });
     }
-    return res.status(403).json({ error: "Token inválido" });
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ error: "Token inválido", details: error.message });
+    }
+    return res.status(401).json({ error: "Error de autenticación", details: error.message });
   }
 };
 

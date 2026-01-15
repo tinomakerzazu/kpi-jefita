@@ -12,6 +12,7 @@
     const token = getAuthToken();
     
     if (!token) {
+      console.error("❌ No hay token de autenticación");
       throw new Error("No autenticado. Por favor inicia sesión.");
     }
 
@@ -32,20 +33,37 @@
       },
     };
 
+    // Debug: verificar que el token se está enviando (solo en desarrollo)
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.log(`🔐 Enviando petición a: ${API_BASE}${endpoint}`, {
+        hasToken: !!token,
+        tokenLength: token.length,
+        tokenPreview: token.substring(0, 20) + '...'
+      });
+    }
+
     const response = await fetch(`${API_BASE}${endpoint}`, mergedOptions);
 
     if (response.status === 401) {
       // Token expirado o inválido
-      localStorage.removeItem("authToken");
-      sessionStorage.removeItem("auth");
-      sessionStorage.removeItem("userEmail");
-      sessionStorage.removeItem("userId");
-      window.location.href = "index.html";
-      throw new Error("Sesión expirada. Por favor inicia sesión nuevamente.");
+      const errorData = await response.json().catch(() => ({ error: "No autorizado" }));
+      console.error("❌ Error 401 - Token inválido:", errorData);
+      
+      // Solo redirigir si realmente es un error de autenticación
+      // No redirigir si es un error temporal de red
+      if (errorData.error && !errorData.error.includes("fetch")) {
+        localStorage.removeItem("authToken");
+        sessionStorage.removeItem("auth");
+        sessionStorage.removeItem("userEmail");
+        sessionStorage.removeItem("userId");
+        window.location.href = "index.html";
+      }
+      throw new Error(errorData.error || "Sesión expirada. Por favor inicia sesión nuevamente.");
     }
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: "Error desconocido" }));
+      const error = await response.json().catch(() => ({ error: `Error ${response.status}` }));
+      console.error(`❌ Error ${response.status} en ${endpoint}:`, error);
       throw new Error(error.error || `Error ${response.status}`);
     }
 
