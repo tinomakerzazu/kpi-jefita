@@ -40,20 +40,11 @@ tmp/
 temp/
 .cache/
 
-# Documentación de deploy (no subir a GitHub)
-DEPLOY_PASO_A_PASO.md
-DEPLOY_CHECKLIST.md
-GUIA_DEPLOY.md
-QUICK_DEPLOY.md
-COMO_OBTENER_SERVICE_ROLE_KEY.md
-OPCIONES_REACT.md
-README_SEGURIDAD.md
-SEGURIDAD_IMPLEMENTADA.md
-ANALISIS_SEGURIDAD.md
-ANALISIS_COMPLETO.md
-VERIFICACION_PRE_DEPLOY.md
-RESUMEN_VERIFICACION.md
-ELIMINAR_DOCS.md
-INSTRUCCIONES_ELIMINAR.md
+# Documentación - Todos los .md excepto server/README.md
+*.md
+!server/README.md
+
+# Scripts de utilidad
 eliminar-docs.ps1
-SOLUCION_PUSH.md
+subir-cambios.bat
+limpiar-md.bat
