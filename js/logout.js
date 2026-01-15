@@ -1,32 +1,45 @@
 (() => {
   const btn = document.getElementById("logoutBtn");
   if (!btn) return;
-  
-  // Función para obtener cliente de Supabase
-  function getSupabaseClient() {
-    if (!window.supabase || !window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
-      return null;
-    }
-    return window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+  const API_BASE = window.API_BASE_URL || "http://localhost:3001";
+
+  // Función para obtener token
+  function getAuthToken() {
+    return localStorage.getItem("authToken");
   }
 
-  btn.addEventListener("click", async () => {
-    const client = getSupabaseClient();
-    
-    // Cerrar sesión en Supabase si está disponible
-    if (client) {
-      try {
-        await client.auth.signOut();
-      } catch (err) {
-        console.error("Error al cerrar sesión en Supabase:", err);
-      }
-    }
-    
-    // Limpiar sessionStorage
+  // Función para limpiar sesión
+  function clearSession() {
+    localStorage.removeItem("authToken");
     sessionStorage.removeItem("auth");
     sessionStorage.removeItem("userEmail");
     sessionStorage.removeItem("userId");
-    
+  }
+
+  btn.addEventListener("click", async () => {
+    const token = getAuthToken();
+
+    // Cerrar sesión en el backend si hay token
+    if (token) {
+      try {
+        await fetch(`${API_BASE}/api/auth/logout`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+      } catch (err) {
+        console.error("Error al cerrar sesión en el servidor:", err);
+        // Continuar con limpieza local aunque falle el servidor
+      }
+    }
+
+    // Limpiar sesión local
+    clearSession();
+
     // Redirigir al login
     window.location.href = "index.html";
   });

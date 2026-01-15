@@ -186,9 +186,11 @@ const okrBest = {};
 let supabaseRows = [];
 let logoDataUrl = null;
 
+// Función deprecada - Ahora usamos SecureAPI
+// Mantenida para compatibilidad pero no debería usarse
 function getSupabaseClient() {
-  if (!window.supabase || !window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) return null;
-  return window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+  console.warn("getSupabaseClient() está deprecado. Usa window.SecureAPI en su lugar.");
+  return null; // Ya no se usa directamente
 }
 
 function scoreQuestions() {
@@ -1757,18 +1759,13 @@ async function refreshCsv() {
 }
 
 async function refreshSupabase() {
-  const client = getSupabaseClient();
-  if (!client) return;
+  if (!window.SecureAPI) {
+    if (els.sbStatus) els.sbStatus.textContent = "API no disponible";
+    return;
+  }
   try {
     if (els.sbStatus) els.sbStatus.textContent = "Supabase: cargando...";
-    const { data, error } = await client
-      .from(SUPABASE_TABLE)
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) {
-      if (els.sbStatus) els.sbStatus.textContent = "Supabase: error";
-      return;
-    }
+    const data = await window.SecureAPI.getKpiRespuestas();
     supabaseRows = data || [];
     buildSupabaseOptions();
     buildSupabaseCompareOptions();
@@ -1778,7 +1775,8 @@ async function refreshSupabase() {
       updateStatus();
     }
   } catch (err) {
-    if (els.sbStatus) els.sbStatus.textContent = "Supabase: error";
+    console.error("Error cargando Supabase:", err);
+    if (els.sbStatus) els.sbStatus.textContent = `Supabase: ${err.message || "error"}`;
   }
 }
 
@@ -1807,20 +1805,20 @@ function getSupabasePayload() {
 }
 
 async function saveToSupabase() {
-  const client = getSupabaseClient();
-  if (!client) {
-    if (els.supabaseStatus) els.supabaseStatus.textContent = "Supabase no configurado";
+  if (!window.SecureAPI) {
+    if (els.supabaseStatus) els.supabaseStatus.textContent = "API no disponible";
     return;
   }
   const payload = getSupabasePayload();
   if (els.supabaseStatus) els.supabaseStatus.textContent = "Guardando...";
-  const { error } = await client.from(SUPABASE_TABLE).insert(payload);
-  if (error) {
-    if (els.supabaseStatus) els.supabaseStatus.textContent = `Error: ${error.message}`;
-    return;
+  try {
+    await window.SecureAPI.saveKpiRespuesta(payload);
+    if (els.supabaseStatus) els.supabaseStatus.textContent = "Guardado en Supabase";
+    refreshSupabase();
+  } catch (error) {
+    console.error("Error guardando en Supabase:", error);
+    if (els.supabaseStatus) els.supabaseStatus.textContent = `Error: ${error.message || "Error al guardar"}`;
   }
-  if (els.supabaseStatus) els.supabaseStatus.textContent = "Guardado en Supabase";
-  refreshSupabase();
 }
 
 buildForms();

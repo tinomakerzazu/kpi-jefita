@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:3001";
+// Usar la configuración global de API_BASE_URL (definida en config.js)
+const API_BASE = window.API_BASE_URL || "http://localhost:3001";
 
 const FALLBACK_HEADERS = [
   "Timestamp",

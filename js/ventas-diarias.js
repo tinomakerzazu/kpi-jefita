@@ -35,9 +35,10 @@ if (ventasEls.ventasFecha) {
   ventasEls.ventasFecha.value = today;
 }
 
+// Función deprecada - Ahora usamos SecureAPI
 function getSupabaseClient() {
-  if (!window.supabase || !window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) return null;
-  return window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+  console.warn("getSupabaseClient() está deprecado. Usa window.SecureAPI en su lugar.");
+  return null;
 }
 
 function cleanDisplay(text) {
@@ -60,9 +61,8 @@ function formatDate(dateStr) {
 }
 
 async function guardarVentasDiarias() {
-  const client = getSupabaseClient();
-  if (!client) {
-    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Supabase no configurado";
+  if (!window.SecureAPI) {
+    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "API no disponible";
     return;
   }
 
@@ -129,14 +129,7 @@ async function guardarVentasDiarias() {
   if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Guardando...";
   
   try {
-    const { error } = await client.from(VENTAS_TABLE).insert(payload);
-    
-    if (error) {
-      console.error("Error al guardar:", error);
-      if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = `Error: ${error.message}`;
-      alert(`Error al guardar: ${error.message}`);
-      return;
-    }
+    await window.SecureAPI.saveVentaDiaria(payload);
 
     if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Guardado exitosamente";
     
@@ -189,14 +182,13 @@ function limpiarFormulario() {
 }
 
 async function cargarHistorial() {
-  const client = getSupabaseClient();
-  if (!client) {
-    if (ventasEls.historialStatus) ventasEls.historialStatus.textContent = "Supabase no configurado";
+  if (!window.SecureAPI) {
+    if (ventasEls.historialStatus) ventasEls.historialStatus.textContent = "API no disponible";
     if (ventasEls.ventasTableBody) {
       ventasEls.ventasTableBody.innerHTML = `
         <tr>
           <td colspan="10" style="text-align: center; padding: 40px; color: var(--text-muted);">
-            Supabase no configurado
+            API no disponible
           </td>
         </tr>
       `;
@@ -207,27 +199,7 @@ async function cargarHistorial() {
   if (ventasEls.historialStatus) ventasEls.historialStatus.textContent = "Cargando...";
 
   try {
-    const { data, error } = await client
-      .from(VENTAS_TABLE)
-      .select("*")
-      .order("fecha", { ascending: false })
-      .order("created_at", { ascending: false })
-      .limit(100);
-
-    if (error) {
-      console.error("Error al cargar historial:", error);
-      if (ventasEls.historialStatus) ventasEls.historialStatus.textContent = "Error";
-      if (ventasEls.ventasTableBody) {
-        ventasEls.ventasTableBody.innerHTML = `
-          <tr>
-          <td colspan="10" style="text-align: center; padding: 40px; color: var(--text-muted);">
-            Error al cargar registros: ${error.message}
-          </td>
-          </tr>
-        `;
-      }
-      return;
-    }
+    const data = await window.SecureAPI.getVentasDiarias(100);
 
     if (ventasEls.historialStatus) {
       const count = data?.length || 0;
@@ -288,27 +260,26 @@ async function cargarHistorial() {
 }
 
 async function eliminarVenta(id) {
-  const client = getSupabaseClient();
-  if (!client) {
-    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Supabase no configurado";
+  if (!window.SecureAPI) {
+    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "API no disponible";
     return;
   }
   if (!id) return;
   if (!confirm("¿Eliminar este registro?")) return;
 
   if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Eliminando...";
-  const { error } = await client.from(VENTAS_TABLE).delete().eq("id", id);
-  if (error) {
+  try {
+    await window.SecureAPI.deleteVentaDiaria(id);
+    await cargarHistorial();
+    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Registro eliminado";
+    setTimeout(() => {
+      if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Listo";
+    }, 2000);
+  } catch (error) {
     console.error("Error al eliminar:", error);
-    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = `Error: ${error.message}`;
-    alert(`Error al eliminar: ${error.message}`);
-    return;
+    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = `Error: ${error.message || "Error al eliminar"}`;
+    alert(`Error al eliminar: ${error.message || "Error desconocido"}`);
   }
-  await cargarHistorial();
-  if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Registro eliminado";
-  setTimeout(() => {
-    if (ventasEls.ventasStatus) ventasEls.ventasStatus.textContent = "Listo";
-  }, 2000);
 }
 
 // Función helper para obtener logo como DataURL

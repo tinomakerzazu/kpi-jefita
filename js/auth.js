@@ -6,18 +6,64 @@
 
   if (!form) return;
 
+  const API_BASE = window.API_BASE_URL || "http://localhost:3001";
+
   const setError = (message) => {
     if (!errorEl) return;
     errorEl.textContent = message || "";
     errorEl.style.display = message ? "block" : "none";
   };
 
-  // Función para obtener cliente de Supabase
-  function getSupabaseClient() {
-    if (!window.supabase || !window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
-      return null;
+  // Función para obtener token almacenado
+  function getAuthToken() {
+    // Intentar obtener de cookie (más seguro, pero solo funciona si está en mismo dominio)
+    // Si no, usar localStorage como fallback
+    return localStorage.getItem("authToken");
+  }
+
+  // Función para guardar token
+  function saveAuthToken(token) {
+    localStorage.setItem("authToken", token);
+  }
+
+  // Función para limpiar token
+  function clearAuthToken() {
+    localStorage.removeItem("authToken");
+    sessionStorage.removeItem("auth");
+    sessionStorage.removeItem("userEmail");
+    sessionStorage.removeItem("userId");
+  }
+
+  // Función para verificar autenticación con el backend
+  async function verifyAuth() {
+    const token = getAuthToken();
+    if (!token) return false;
+
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/verify`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Incluir cookies
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.authenticated && data.user) {
+          sessionStorage.setItem("auth", "1");
+          sessionStorage.setItem("userEmail", data.user.email);
+          sessionStorage.setItem("userId", data.user.id);
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error("Error verificando autenticación:", error);
     }
-    return window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+    clearAuthToken();
+    return false;
   }
 
   form.addEventListener("submit", async (event) => {
@@ -32,9 +78,10 @@
       return;
     }
 
-    const client = getSupabaseClient();
-    if (!client) {
-      setError("Error: Supabase no está configurado correctamente.");
+    // Validación básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Ingresa un correo electrónico válido.");
       return;
     }
 
@@ -45,25 +92,39 @@
     submitBtn.innerHTML = '<span>Verificando...</span>';
 
     try {
-      // Intentar hacer login con Supabase
-      const { data, error } = await client.auth.signInWithPassword({
-        email: email,
-        password: password
+      // Autenticar con el backend
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Incluir cookies
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
       });
 
-      if (error) {
-        setError(error.message || "Credenciales incorrectas o usuario no registrado.");
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Credenciales incorrectas o usuario no registrado.");
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
         return;
       }
 
-      if (data && data.user) {
-        // Login exitoso - guardar sesión
+      if (data.success && data.user) {
+        // Guardar token
+        if (data.token) {
+          saveAuthToken(data.token);
+        }
+
+        // Guardar información de sesión
         sessionStorage.setItem("auth", "1");
-        sessionStorage.setItem("userEmail", email);
+        sessionStorage.setItem("userEmail", data.user.email);
         sessionStorage.setItem("userId", data.user.id);
-        
+
         // Redirigir a la página principal
         window.location.href = "kpi.html";
       } else {
@@ -73,24 +134,18 @@
       }
     } catch (err) {
       console.error("Error en login:", err);
-      setError("Error inesperado al iniciar sesión. Verifica tu conexión.");
+      setError("Error inesperado al iniciar sesión. Verifica tu conexión y que el servidor esté corriendo.");
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalText;
     }
   });
 
-  // Verificar si ya hay una sesión activa
+  // Verificar si ya hay una sesión activa al cargar la página
   window.addEventListener("DOMContentLoaded", async () => {
-    const client = getSupabaseClient();
-    if (client) {
-      const { data: { session } } = await client.auth.getSession();
-      if (session) {
-        // Ya hay una sesión activa, redirigir
-        sessionStorage.setItem("auth", "1");
-        sessionStorage.setItem("userEmail", session.user.email);
-        sessionStorage.setItem("userId", session.user.id);
-        window.location.href = "kpi.html";
-      }
+    const isAuthenticated = await verifyAuth();
+    if (isAuthenticated) {
+      // Ya hay una sesión activa, redirigir
+      window.location.href = "kpi.html";
     }
   });
 })();
