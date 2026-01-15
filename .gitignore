@@ -1,0 +1,60 @@
+# Variables de entorno y credenciales
+server/.env
+server/credentials.json
+server/token.json
+.env
+*.env
+!.env.example
+!server/env.example
+
+# Node modules
+node_modules/
+server/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build
+dist/
+build/
+.serverless/
+
+# Temporal
+tmp/
+temp/
+.cache/
+
+# Documentación de deploy (no subir a GitHub)
+DEPLOY_PASO_A_PASO.md
+DEPLOY_CHECKLIST.md
+GUIA_DEPLOY.md
+QUICK_DEPLOY.md
+COMO_OBTENER_SERVICE_ROLE_KEY.md
+OPCIONES_REACT.md
+README_SEGURIDAD.md
+SEGURIDAD_IMPLEMENTADA.md
+ANALISIS_SEGURIDAD.md
+ANALISIS_COMPLETO.md
+VERIFICACION_PRE_DEPLOY.md
+RESUMEN_VERIFICACION.md
+ELIMINAR_DOCS.md
+INSTRUCCIONES_ELIMINAR.md
+eliminar-docs.ps1
+INSTRUCCIONES_ELIMINAR.md
+eliminar-docs.ps1
